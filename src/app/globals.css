@@ -1,8 +1,12 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-*{
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --breakpoint-md: 800px;
+  --color-light-gray: #cccccc;
+  --color-medium-gray: #999999;
+  --color-dark-gray: #666666;
+  --color-like-gray: #1C2526;
+}
+* {
   box-sizing: border-box;
 }

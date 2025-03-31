@@ -8,11 +8,10 @@ const Navbar = () => {
   const menuItems = [
     { name: "Home", icon: <FaHome /> },
     { name: "Tasks", icon: <FaListAlt /> },
-    { name: "Receipts", icon: <FaReceipt /> },
   ];
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="hidden sm:flex gap-2 justify-center">
       {menuItems.map((item) => (
         <div
           key={item.name}
@@ -25,7 +24,7 @@ const Navbar = () => {
         >
           <span className="text-[15px]">{item.icon}</span>
           <span
-            className={`overflow-hidden text-[9px] transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+            className={`overflow-hidden text-[10px] transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
               active === item.name ? "opacity-100 w-auto ml-1" : "opacity-0 w-0"
             }`}
           >
