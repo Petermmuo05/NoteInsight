@@ -1,23 +1,26 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
-import { FaHome, FaListAlt, FaReceipt } from "react-icons/fa";
+import { FaHome, FaUsers } from "react-icons/fa";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
 
   const menuItems = [
-    { name: "Home", icon: <FaHome /> },
-    { name: "Tasks", icon: <FaListAlt /> },
+    { name: "Home", icon: <FaHome />, url:"/dashboard" },
+    { name: "Community", icon: <FaUsers /> },
   ];
 
   return (
     <div className="hidden sm:flex gap-2 justify-center">
       {menuItems.map((item) => (
-        <div
+        <Link href={item.url? item.url : "/dashboard"}
           key={item.name}
           className={`relative flex items-center justify-center  px-3 py-2 rounded-full transition-[width,background-color] duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
             active === item.name
-              ? "bg-black text-white px-5 py-3 shadow-lg scale-105 w-24"
+              ? `bg-black text-white px-5 py-3 shadow-lg scale-105 ${
+                  item.name === "Community" ? "w-[120px]" : "w-24"
+                }`
               : "bg-[#ececec] text-gray-500 w-12"
           } cursor-pointer`}
           onClick={() => setActive(item.name)}
@@ -30,7 +33,7 @@ const Navbar = () => {
           >
             {item.name}
           </span>
-        </div>
+        </Link>
       ))}
     </div>
   );

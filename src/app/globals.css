@@ -1,12 +1,88 @@
 @import "tailwindcss";
 @theme {
   --font-display: "Satoshi", "sans-serif";
-  --breakpoint-md: 800px;
   --color-light-gray: #cccccc;
   --color-medium-gray: #999999;
   --color-dark-gray: #666666;
-  --color-like-gray: #1C2526;
+  --color-like-gray: #1c2526;
+  --color-vanilla-cream:#f9f8f6;
+
+
 }
 * {
   box-sizing: border-box;
 }
+
+.no-select {
+  user-select: none; /* Prevents text selection */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+.shake-animation {
+  animation: shake 0.5s;
+}
+
+.frosted-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: all 200ms ease-in-out;
+}
+
+.frosted-glass:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.frosted-glass:active {
+  animation: press 150ms ease-in-out;
+}
+
+@keyframes press {
+  0% {
+    transform: scale(1);
+    background: rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    transform: scale(0.98);
+    background: rgba(109, 130, 153, 0.3); /* Slate blue with opacity */
+  }
+  100% {
+    transform: scale(1);
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+  75% {
+    transform: rotate(-8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar for Webkit-based browsers (Chrome, Safari) */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+

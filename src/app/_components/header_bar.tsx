@@ -1,0 +1,57 @@
+"use client";
+import { Playfair_Display_SC } from "next/font/google";
+import React, { useEffect, useState } from "react";
+import Navbar from "../dashboard/navbar";
+import SettingsIcon from "../dashboard/settings_icon";
+import NotificationBell from "../dashboard/notification_icon";
+import Profile from "../../../public/profilehuman.jpg";
+import Image from "next/image";
+
+const playFair = Playfair_Display_SC({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+});
+
+export default function Header() {
+  const [hasShadow, setHasShadow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasShadow(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      className={`no-select fixed top-0 py-4  ${
+        hasShadow
+          ? "bg-vanilla-cream/15 backdrop-blur-lg shadow-md bg-opacity-30"
+          : "bg-vanilla-cream"
+      }  left-0 px-4 z-10 flex flex-row items-center justify-between w-full`}
+    >
+      <h2
+        className={`text-2xl font-[800] ${playFair.className} text-[#1C2526]`}
+      >
+        NoteInsight
+      </h2>
+      <Navbar />
+      <div className="flex flex-row items-center gap-2">
+        <div className="hidden md:flex  w-8 h-8 items-center justify-center bg-white rounded-full">
+          <SettingsIcon />
+        </div>
+        <div className="hidden w-8 md:flex h-8 items-center justify-center bg-white rounded-full">
+          <NotificationBell />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center overflow-hidden">
+            <Image src={Profile} className="w-8 h-10" alt="Globe" />
+          </div>
+          <p className="hidden md:inline text-md font-bold ">Hi, Joshua</p>
+        </div>
+      </div>
+    </div>
+  );
+}

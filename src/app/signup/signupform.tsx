@@ -28,7 +28,7 @@ export default function SignUpform() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#666666]"
           required
         />
       </div>
@@ -40,7 +40,7 @@ export default function SignUpform() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#666666]"
           required
         />
       </div>
@@ -52,7 +52,7 @@ export default function SignUpform() {
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#666666]"
           required
         />
       </div>
@@ -60,7 +60,7 @@ export default function SignUpform() {
       {/* Sign Up Button */}
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white font-medium py-3 max-sm:mt-8  max-sm:py-4 rounded-full hover:bg-blue-700 transition-colors duration-200 shadow-[0px_4px_8px_rgba(0,0,0,0.2)]"
+        className="w-full bg-dark-gray hover:bg-like-gray text-white font-medium py-3 max-sm:mt-8 max-sm:py-4 rounded-full  transition-colors duration-200 shadow-[0px_4px_8px_rgba(0,0,0,0.2)]"
       >
         Sign Up
       </button>
