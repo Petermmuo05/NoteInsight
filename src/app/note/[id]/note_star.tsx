@@ -7,7 +7,7 @@ export default function NoteStar() {
   return (
     <FaStar
       className={`cursor-pointer active:scale-90 hover:scale-102 text-[1.7rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.5rem] transition-all duration-200 ease-in-out ${
-        active ? "text-black" : "text-white stroke-black stroke-[15] "
+        active ? "text-[#1C2526]" : "text-white stroke-[#1C2526] stroke-[15] "
       }`}
       onClick={(e) => {
         setActive(!active);

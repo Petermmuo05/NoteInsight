@@ -20,7 +20,7 @@ export default function Note() {
       className={`flex ${openSans} gap-4 flex-col scrollbar-hide bg-[#f9f8f6] text-[#1b140e] p-4 h-screen`}
     >
       <Header />
-      <div className="flex flex-col gap-3 sm:gap-4 mt-16 sm:mt-24 w-full px-4 sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
+      <div className="flex flex-col gap-3 sm:gap-4 mt-16 sm:mt-24 w-full px-1 sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
         <div className="flex no-select flex-row justify-between items-center ">
           <div className="flex flex-row items-center">
             <Image
@@ -28,7 +28,7 @@ export default function Note() {
               className="w-[2.7rem] sm:w-[2.8rem] md:w-[3.2rem]  lg:w-[4rem]"
               alt="file"
             />
-            <h1 className=" font-extrabold text-[2.1rem] sm:text-[2.2rem] md:text-[2.5rem] lg:text-[2.8rem]">
+            <h1 className=" font-extrabold text-[1.8rem] sm:text-[2.2rem] md:text-[2.5rem] lg:text-[2.8rem]">
               Lecture 1
             </h1>
           </div>
@@ -43,10 +43,10 @@ export default function Note() {
         </div>
         <div className="flex flex-row mt-2 sm:mt-5 w-full h-full">
           
-          <div className="flex flex-col ml-5 sm:ml-20 w-full h-full gap-5 sm:gap-8 ">
+          <div className="flex flex-col ml-2 sm:ml-20 w-full h-full gap-5 sm:gap-8 ">
             <div className="flex flex-row items-center gap-3">
               <FrostedGlassBox />
-              <div className="flex justify-center gap-1 items-center">
+              <div className="hidden sm:flex justify-center gap-1 items-center">
                 <Tooltip title="Summary" arrow>
                   <MdSummarize
                     size={35}
@@ -65,7 +65,7 @@ export default function Note() {
               <h1 className="text-[1.4rem] sm:text-[1.5rem] md:text-[1.7rem] lg:text-[2rem]  font-bold">
                 Summary
               </h1>
-              <p className="text-lg mt-4 sm:mt-6   text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px]  font-normal">
+              <p className="text-lg mt-2 sm:mt-4   text-[14px] sm:text-[13px] md:text-[14px] lg:text-[16px]  font-normal">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
                 nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed
                 nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis

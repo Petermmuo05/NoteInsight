@@ -20,17 +20,18 @@ export default function FrostedGlassBox() {
           bg-white/70     /* Semi-transparent white overlay */
           lg:w-[400px]
           md:w-[280px]
-
-          p-3 
+          w-[280px]
+          p-2
+          sm:p-3 
           gap-2
-            transition-all duration-300 ease-in-out 
+          transition-all duration-300 ease-in-out 
           hover:scale-105 
           hover:shadow-2xl 
           active:scale-95
         "
     >
       <div className="flex items-center bg-light-gray p-3 rounded-lg justify-center">
-        <FaFile size={20} className="" />
+        <FaFile className="text-[15px] sm:text-[20px]  " />
       </div>
       <div className="w-full flex flex-col justify-center h-full gap-1">
         <p className="leading-[100%] text-[14px] sm:text-[16px] font-bold">
