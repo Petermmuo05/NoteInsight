@@ -4,8 +4,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../dashboard/navbar";
 import SettingsIcon from "../dashboard/settings_icon";
 import NotificationBell from "../dashboard/notification_icon";
-import Profile from "../../../public/profilehuman.jpg";
-import Image from "next/image";
+import ProfileMenu from "../note/[id]/ProfileMenu";
 
 const playFair = Playfair_Display_SC({
   subsets: ["latin"],
@@ -46,9 +45,7 @@ export default function Header() {
           <NotificationBell />
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center overflow-hidden">
-            <Image src={Profile} className="w-8 h-10" alt="Globe" />
-          </div>
+          <ProfileMenu />
           <p className="hidden md:inline text-md font-bold ">Hi, Joshua</p>
         </div>
       </div>
