@@ -17,13 +17,13 @@ const SignUp: NextPage = () => {
   return (
     <div className={inter.className}>
       <Head>
-        <title>Notelnsight - Login</title>
+        <title>Notelnsight - Register</title>
         <meta name="description" content="Login to Notelnsight" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className="min-h-screen overflow-hidden bg-gray-50 flex items-center  max-sm:items-start justify-center max-sm:bg-gray-100 max-sm:p-0 p-4">
-        <div className="bg-gray-100 rounded-lg sm:shadow-lg py-[60px] max-sm:py-[20vh] h-auto max-sm:pt-[15vh] min-w-sm px-8 max-sm:w-full min-h-[500px] max-sm:gap-24 max-sm:h-full flex flex-col justify-between">
+        <div className="bg-gray-100 rounded-lg sm:shadow-lg py-[60px] max-sm:py-[20vh] h-auto max-sm:pt-[15vh] min-w-sm px-8 max-sm:w-full min-h-[600px] max-sm:gap-24 max-sm:h-full flex flex-col justify-between">
           {/* Title */}
           <h1 className={`text-3xl max-sm:text-[40px] ${playFair.className} font-[800] text-black text-center`}>
             NoteInsight

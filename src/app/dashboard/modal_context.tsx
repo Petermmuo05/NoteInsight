@@ -1,9 +1,12 @@
-"use client"
+"use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 // Define the context shape
 interface ModalContextType {
   isModalOpen: boolean;
+  isUploading: boolean;
+  startLoading: () => void;
+  stopLoading: () => void;
   openModal: () => void;
   closeModal: () => void;
 }
@@ -27,12 +30,24 @@ interface ModalProviderProps {
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isUploading, setUploading] = useState<boolean>(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const startLoading = () => setUploading(true);
+  const stopLoading = () => setUploading(false);
 
   return (
-    <ModalContext.Provider value={{ isModalOpen, openModal, closeModal }}>
+    <ModalContext.Provider
+      value={{
+        isModalOpen,
+        openModal,
+        closeModal,
+        startLoading,
+        stopLoading,
+        isUploading,
+      }}
+    >
       {children}
     </ModalContext.Provider>
   );

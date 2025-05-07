@@ -1,26 +1,26 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef} from "react";
 import { Modal } from "@mui/material";
 import { useModal } from "./modal_context";
+import { UploadFile } from "../_lib/actions/dashboard/action";
+import { Session } from "next-auth";
 
-const AttachModal: React.FC = () => {
+const AttachModal = ({ session }: { session: Session | null }) => {
   const { isModalOpen, closeModal } = useModal();
+  const [uploading, setUploading] = useState(false);
   const [closing, setClosing] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File | null>(null); // Changed to a single file
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-
-
-  // Add/remove class and padding to body to prevent layout shift
-
+  const jwt = session?.accessToken;
+  const {startLoading}=useModal();
 
   // Handle closing the modal with animation
   const handleClose = () => {
     setClosing(true);
     setTimeout(() => {
       setClosing(false);
-      setFiles([]);
+      setFile(null); // Reset the file state
       closeModal();
     }, 300);
   };
@@ -39,20 +39,61 @@ const AttachModal: React.FC = () => {
     setIsDragging(false);
   };
 
+  async function uploadDocument(file: File) {
+    const formData = new FormData();
+    handleClose();
+    startLoading();
+    console.log("trying to upload...");
+    if (!file) return;
+    console.log("still trying to upload",uploading);
+    formData.append("file", file);
+    try {
+      setUploading(true);
+      await UploadFile(formData, jwt);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    } finally {
+      setUploading(false);
+    }
+  }
+
   // Handle drop event
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
-    const droppedFiles = Array.from(e.dataTransfer.files) as File[];
-    setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+
+    const droppedFile = e.dataTransfer.files[0]; // Only take the first file
+    if (validateFileType(droppedFile)) {
+      setFile(droppedFile); // Set the single file
+      uploadDocument(droppedFile);
+    } else {
+      alert("Only Word, PDF, or text files are allowed.");
+    }
   };
 
   // Handle file selection via input
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []) as File[];
-    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    const selectedFile = e.target.files?.[0]; // Only take the first file
+    if (selectedFile && validateFileType(selectedFile)) {
+      setFile(selectedFile); // Set the single file
+
+      uploadDocument(selectedFile);
+    } else {
+      alert("Only Word, PDF, or text files are allowed.");
+    }
+  };
+
+  // Validate file type
+  const validateFileType = (file: File) => {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+    ];
+    return allowedTypes.includes(file.type);
   };
 
   // Trigger file input click when "Select files" button is clicked
@@ -101,7 +142,7 @@ const AttachModal: React.FC = () => {
             onClick={handleSelectFilesClick}
             className="border border-white text-white px-4 py-1.5 rounded-lg hover:bg-white hover:text-[#1C2526] transition"
           >
-            Select files
+            Select file
           </button>
           {/* Hidden file input */}
           <input
@@ -109,23 +150,16 @@ const AttachModal: React.FC = () => {
             ref={fileInputRef}
             onChange={handleFileSelect}
             className="hidden"
-            multiple
           />
         </div>
 
-        {/* Display selected files */}
-        {files.length > 0 && (
+        {/* Display selected file */}
+        {file && (
           <div className="mb-4">
-            <p className="text-base mb-2">Selected Files:</p>
-            <ul className="list-disc list-inside text-sm text-[#B0BEC5]">
-              {files.map((file, index) => (
-                <li key={index}>{file.name}</li>
-              ))}
-            </ul>
+            <p className="text-base mb-2">Selected File:</p>
+            <p className="text-sm text-[#B0BEC5]">{file.name}</p>
           </div>
         )}
-
-        {/* Attach URL Section */}
       </div>
     </Modal>
   );

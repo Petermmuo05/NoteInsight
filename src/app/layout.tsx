@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,7 +13,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +34,56 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.className} scrollbar-hide antialiased `}
       >
+        <NextTopLoader color="#666666" showSpinner={false} />
         {children}
+        <Toaster
+          position="top-center" // Or your preferred position
+          reverseOrder={false}
+          // Add toastOptions for styling
+          toastOptions={{
+            // Default options for all toasts
+            className: "", // You can add CSS classes here if needed
+            duration: 5000, // Default duration in milliseconds
+            style: {
+              // Use your CSS variables here
+              background: "var(--color-light-gray)", // Dark background
+              color: "var(--color-vanilla-cream)", // Light text color
+              border: "0px", // Example border
+              padding: "8px", // Example padding
+              fontSize: "0.7rem", // Example font size
+            },
+
+            // Optional: Override styles for specific toast types
+            success: {
+              duration: 1500, // Shorter duration for success?
+              iconTheme: {
+                // Style the success icon itself
+                primary: "#d9f99d", // Color of the checkmark
+                secondary: "var(--color-like-gray)", // Color of the circle behind the checkmark
+              },
+              // You can add specific style overrides here too if needed
+              // style: { background: 'green', color: 'white' },
+            },
+            error: {
+              duration: 6000, // Longer duration for errors?
+              iconTheme: {
+                // Style the error icon
+                primary: "red", // Standard red for error icon
+                secondary: "var(--color-like-gray)",
+              },
+              // style: { background: 'red', color: 'white' },
+            },
+            loading: {
+              // Add specific styles for loading toasts if desired
+              // style: { background: 'var(--color-medium-gray)', color: 'var(--color-vanilla-cream)' },
+              iconTheme: {
+                primary: "var(--color-vanilla-cream)",
+                secondary: "var(--color-like-gray)",
+              },
+            },
+            // You can define options for other types like 'custom' as well
+          }}
+        />
       </body>
     </html>
   );

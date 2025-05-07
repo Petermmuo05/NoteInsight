@@ -1,15 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, MenuItem, Grow } from "@mui/material";
+import { Menu, Grow } from "@mui/material";
 import Image from "next/image";
 import Profile from "../../../../public/profilehuman.jpg"; // Replace with your profile image path
+import { MdAccountCircle, MdLogout } from "react-icons/md";
+import Link from "next/link";
 
 const ProfileMenu = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const open = Boolean(anchorEl);
 
   // Handle opening the menu
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -31,25 +33,43 @@ const ProfileMenu = () => {
         <Image src={Profile} className="w-8 h-10" alt="Profile" />
       </div>
 
-      {/* MUI Menu with Smooth Transition */}
       <Menu
         id="profile-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        disableScrollLock={true} // Prevents scrollbar from disappearing
-        TransitionComponent={Grow} // Smooth grow animation
+        disableScrollLock={true}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        PaperProps={{
-          style: {
-            borderRadius: "10px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            width:"150px"
+        slots={{
+          transition: Grow, // 👈 NEW way to set transition component
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: "10px",
+              padding: "5px 5px", // 👈 Custom padding inside the paper
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              background: "#999999",
+              color: "#000000",
+              width: "120px",
+            },
+          },
+          list: {
+            sx: {
+              padding: 0, // 👈 Removes inner MenuList padding
+            },
           },
         }}
       >
-        <div className="w-full h-6  hover:bg-gray-700 flex items-center  rounded-lg">Name</div>
+        <div className="w-full px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out flex items-center rounded-lg">
+          <MdAccountCircle className="" />
+          <span>Profile</span>
+        </div>
+        <div className="w-full px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out flex items-center rounded-lg">
+          <MdLogout className="" />
+          <Link href="api/auth/signout">Log Out</Link>
+        </div>
       </Menu>
     </div>
   );

@@ -5,13 +5,50 @@ import NoteStar from "./note_star";
 import Trash from "../../../../public/trash.svg";
 import File from "../../../../public/file3.svg";
 import { useQuiz } from "./QuizContext";
-import { MdArrowBack, MdQuiz, MdWest } from "react-icons/md";
+import { MdArrowBack, MdQuiz, MdWest, MdEdit } from "react-icons/md";
+import { NoteData } from "@/app/_lib/definitions";
+import { deleteNoteById } from "@/app/_lib/actions/dashboard/action";
+import { useRouter } from "next/navigation";
+import { useModal } from "@/app/dashboard/modal_context";
+import { useFormModal } from "./ModalContext";
 
-export default function NoteHeading() {
+export default function NoteHeading({
+  note,
+  token,
+}: {
+  note: NoteData;
+  token: string | undefined;
+}) {
   const {
     isQuizOpen,
     openSummary,
   }: { isQuizOpen: boolean; openSummary: () => void } = useQuiz();
+  const router = useRouter();
+  const { startLoading, stopLoading } = useModal();
+  const { openModal } = useFormModal();
+
+  function capitalizeFirstLetter(str: string) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  async function handleDeleteNote(
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ): Promise<void> {
+    event.stopPropagation();
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this note?"
+    );
+    if (confirmDelete) {
+      // Logic to delete the note, e.g., calling an API or updating state
+      startLoading();
+      await deleteNoteById(note.id, token);
+      stopLoading();
+      router.push("/dashboard");
+      console.log(`Note with ID ${note.id} has been deleted.`);
+    }
+  }
+
   return (
     <div className="flex no-select flex-row justify-between items-center ">
       <div className="flex flex-row items-center">
@@ -23,10 +60,11 @@ export default function NoteHeading() {
             className="w-[2.7rem] sm:w-[2.8rem] md:w-[3.2rem]  lg:w-[4rem]"
             alt="file"
           />
-        )}
-
+        )}{" "}
         <h1 className=" font-extrabold text-[1.8rem] sm:text-[2.2rem] md:text-[2.5rem] lg:text-[2.8rem]">
-          Lecture 1
+          {note.title
+            ? capitalizeFirstLetter(note.title)
+            : `Lecture ${note.id}`}
         </h1>
       </div>
       <div className="flex flex-row items-center">
@@ -42,11 +80,16 @@ export default function NoteHeading() {
         ) : (
           <>
             {" "}
-            <NoteStar />
+            <MdEdit
+              onClick={openModal}
+              className="text-[1.5rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.5rem] cursor-pointer active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out"
+            />
+            <NoteStar note={note} token={token} />
             <Image
               src={Trash}
               className=" w-[1.7rem] sm:w-[1.8rem] md:w-[2.1rem] lg:w-[2.5rem]  active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out cursor-pointer"
               alt="trash"
+              onClick={handleDeleteNote}
             />
           </>
         )}

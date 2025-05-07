@@ -1,8 +1,9 @@
 // components/GlassCard.jsx
+import { NoteData } from "@/app/_lib/definitions";
 import React from "react";
 import { FaFile } from "react-icons/fa";
 
-export default function FrostedGlassBox() {
+export default function FrostedGlassBox({ note }: { note: NoteData }) {
   return (
     <div
       className="
@@ -35,7 +36,7 @@ export default function FrostedGlassBox() {
       </div>
       <div className="w-full flex flex-col justify-center h-full gap-1">
         <p className="leading-[100%] text-[14px] sm:text-[16px] font-bold">
-          finalProject.docx
+          {note.fileName}
         </p>
         <p className="text-[12px] sm:text-sm leading-[100%]">Document</p>
       </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Playfair_Display_SC } from "next/font/google";
 import React, { useEffect, useState } from "react";
@@ -5,14 +6,17 @@ import Navbar from "../dashboard/navbar";
 import SettingsIcon from "../dashboard/settings_icon";
 import NotificationBell from "../dashboard/notification_icon";
 import ProfileMenu from "../note/[id]/ProfileMenu";
+import { Session } from "next-auth";
 
 const playFair = Playfair_Display_SC({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
 });
 
-export default function Header() {
+export default function Header({ session }: { session: Session | null }) {
   const [hasShadow, setHasShadow] = useState(false);
+  const user = session?.user;
+  const userName = user?.username;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +50,12 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-2">
           <ProfileMenu />
-          <p className="hidden md:inline text-md font-bold ">Hi, Joshua</p>
+          {userName && (
+            <p className="hidden md:inline text-md font-bold ">
+              Hi,
+              {userName.length > 10 ? `${userName.slice(0, 10)}...` : userName}
+            </p>
+          )}
         </div>
       </div>
     </div>

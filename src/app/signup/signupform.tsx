@@ -1,19 +1,35 @@
 "use client";
 import React, { FormEvent, useState } from "react";
+import { Register } from "../_lib/actions/dashboard/action";
+import { useRouter } from "next/navigation";
 
 export default function SignUpform() {
-  const [email, setEmail] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [email, setEmail] = useState<string>(""); // Added email state
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>(""); // New state for confirm password
-
-  const handleSubmit = (e: FormEvent) => {
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const router = useRouter(); // Import useRouter from next/router
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
     // Handle signup logic here
-    console.log("Email:", email, "Password:", password);
+    try {
+      await Register({ firstName, email, password }); // make the call
+      router.push("/login"); // redirect on success
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
+    console.log(
+      "FirstName:",
+      firstName,
+      "Email:",
+      email,
+      "Password:",
+      password
+    );
   };
 
   return (
@@ -21,6 +37,18 @@ export default function SignUpform() {
       onSubmit={handleSubmit}
       className="space-y-6 mt-[3vh] max-sm:text-[18px] text-[15px]"
     >
+      {/* Username Input */}
+      <div>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#666666]"
+          required
+        />
+      </div>
+
       {/* Email Input */}
       <div>
         <input
