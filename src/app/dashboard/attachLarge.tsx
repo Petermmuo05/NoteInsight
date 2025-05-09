@@ -6,6 +6,7 @@ import { Client, IMessage } from "@stomp/stompjs";
 import { Session } from "next-auth";
 import SockJS from "sockjs-client";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface ErrorResponse {
   error: string;
@@ -18,7 +19,7 @@ export default function AttachFile({ session }: { session: Session | null }) {
   const userEmail = session?.user.email;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const { stopLoading } = useModal();
-  const router=useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (!client.current && jwt) {
@@ -43,6 +44,7 @@ export default function AttachFile({ session }: { session: Session | null }) {
           stompClient.subscribe("/user/queue/errors", (message: IMessage) => {
             stopLoading();
             const { error }: ErrorResponse = JSON.parse(message.body);
+            toast.error("Failed to create note; please try again.");
             console.error("Error:", error);
           });
         },
