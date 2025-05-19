@@ -14,6 +14,10 @@ interface updateNoteData {
   id: number;
 }
 
+interface createTagData {
+  name: string;
+}
+
 export async function Register(registerData: registerDataType) {
   try {
     const response = await axios.post(
@@ -44,6 +48,30 @@ export async function getNoteById(id: number, token: string) {
   } catch (error) {
     console.error("Error fetching note:", error);
     throw error;
+  }
+}
+
+export async function createTag(
+  tagData: createTagData,
+  token: string | undefined
+) {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/tag`,
+      tagData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Revalidate the tags path if necessary
+    revalidatePath("/");
+    return response.data; // Return the created tag data
+  } catch (error) {
+    console.error("Error creating tag:", error);
+    throw error; // Optionally re-throw the error to be handled by the calling function
   }
 }
 
@@ -88,9 +116,28 @@ export async function deleteNoteById(id: number, token: string | undefined) {
         },
       }
     );
+    revalidatePath("/");
     return response.data;
   } catch (error) {
     console.error("Error deleting note:", error);
+    throw error;
+  }
+}
+
+export async function deleteTagById(id: number, token: string | undefined) {
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/tag/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    revalidatePath("/");
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting tag:", error);
     throw error;
   }
 }
@@ -114,6 +161,28 @@ export async function updateFavorite(
     return response.data;
   } catch (error) {
     console.error("Error updating note:", error);
+    throw error;
+  }
+}
+
+export async function updateUser(
+  token: string | undefined,
+  userData: { token: string | undefined; name: string; email: string }
+) {
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/update`,
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    revalidatePath("/dashboard");
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user:", error);
     throw error;
   }
 }
@@ -161,6 +230,32 @@ export async function UploadFile(
   } catch (error) {
     console.error("Error:", error);
     throw error;
+  }
+}
+
+export async function uploadProfilePicture(
+  formData: FormData,
+  token: string | undefined
+): Promise<string> {
+  if (!token) throw new Error("Unauthorized");
+
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/upload-picture`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    revalidatePath("/dashboard");
+    return response.data.imageUrl;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Upload failed:", error.response?.data || error.message);
+    throw new Error("Image upload failed");
   }
 }
 

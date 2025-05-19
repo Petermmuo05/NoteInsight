@@ -2,6 +2,7 @@ export type User = {
   id: string;
   firstName: string;
   email: string;
+  image: string | null;
   token: string;
 };
 
@@ -29,4 +30,5 @@ export interface NoteData {
 export interface Tag {
   id: number;
   name: string;
+  isDefault: boolean;
 }

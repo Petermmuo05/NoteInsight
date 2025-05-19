@@ -7,13 +7,21 @@ import SettingsIcon from "../dashboard/settings_icon";
 import NotificationBell from "../dashboard/notification_icon";
 import ProfileMenu from "../note/[id]/ProfileMenu";
 import { Session } from "next-auth";
+import SettingsModal from "./SettingsModal";
+import { Tag } from "../_lib/definitions";
 
 const playFair = Playfair_Display_SC({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
 });
 
-export default function Header({ session }: { session: Session | null }) {
+export default function Header({
+  session,
+  tags,
+}: {
+  session: Session | null;
+  tags: Tag[];
+}) {
   const [hasShadow, setHasShadow] = useState(false);
   const user = session?.user;
   const userName = user?.username;
@@ -49,7 +57,7 @@ export default function Header({ session }: { session: Session | null }) {
           <NotificationBell />
         </div>
         <div className="flex items-center gap-2">
-          <ProfileMenu />
+          <ProfileMenu session={session}/>
           {userName && (
             <p className="hidden md:inline text-md font-bold ">
               Hi,
@@ -58,6 +66,7 @@ export default function Header({ session }: { session: Session | null }) {
           )}
         </div>
       </div>
+      <SettingsModal tags={tags} token={session?.accessToken} />
     </div>
   );
 }

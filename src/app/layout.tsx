@@ -3,6 +3,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${inter.className} scrollbar-hide antialiased `}
       >
         <NextTopLoader color="#666666" showSpinner={false} />
-        {children}
+        <SessionProvider>{children}</SessionProvider>
+
         <Toaster
           position="top-center" // Or your preferred position
           reverseOrder={false}

@@ -45,7 +45,7 @@ export default function FlashCard({ quizList }: { quizList: Quiz[] }) {
           <p className="font-medium text-xs sm:text-sm md:text-base lg:text-[0.95rem]">
             Question {currentQuestionIndex + 1} of {quizLen}
           </p>
-          <ProgressBar progress={(currentQuestionIndex + 1 / quizLen) * 100} />
+          <ProgressBar progress={((currentQuestionIndex + 1) / quizLen) * 100} />
         </div>
 
         {/* Question */}

@@ -3,12 +3,22 @@ import React, { useState } from "react";
 import { Menu, Grow } from "@mui/material";
 import Image from "next/image";
 import Profile from "../../../../public/profilehuman.jpg"; // Replace with your profile image path
-import { MdAccountCircle, MdLogout } from "react-icons/md";
+import { MdAccountCircle, MdLogout, MdSettings } from "react-icons/md";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Session } from "next-auth";
 
-const ProfileMenu = () => {
+const ProfileMenu = ({ session }: { session: Session | null }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleOpenSettings = () => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    current.set("modal", "settings");
+    router.push(`?${current.toString()}`);
+  };
 
   // Handle opening the menu
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -30,7 +40,12 @@ const ProfileMenu = () => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
       >
-        <Image src={Profile} className="w-8 h-10" alt="Profile" />
+        <Image
+          src={session?.user?.image || Profile}
+          width={80}
+          height={100}
+          alt="Profile"
+        />
       </div>
 
       <Menu
@@ -62,9 +77,15 @@ const ProfileMenu = () => {
           },
         }}
       >
-        <div className="w-full px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out flex items-center rounded-lg">
-          <MdAccountCircle className="" />
-          <span>Profile</span>
+        <div
+          onClick={() => {
+            handleOpenSettings();
+            handleClose();
+          }}
+          className="w-full flex sm:hidden px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out  items-center rounded-lg"
+        >
+          <MdSettings className="" />
+          <span>Settings</span>
         </div>
         <div className="w-full px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out flex items-center rounded-lg">
           <MdLogout className="" />

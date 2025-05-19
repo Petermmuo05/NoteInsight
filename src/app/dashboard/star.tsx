@@ -7,7 +7,7 @@ import { useModal } from "./modal_context";
 import toast from "react-hot-toast";
 
 export default function Star({
-  size = "1.5rem",
+  size = "1.6rem",
   token,
   note,
 }: {

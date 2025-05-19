@@ -30,7 +30,7 @@ export default async function Dashboard() {
       <div
         className={`flex ${openSans} gap-4 flex-col bg-[#f9f8f6] scrollbar-hide text-[#1b140e] p-4 min-h-screen`}
       >
-        <Header session={session} />
+        <Header session={session} tags={tags}/>
         <div className="w-full mt-16 cursor-pointer  flex gap-2 sm:justify-end">
           <SearchBar tags={tags} />
           <AttachFile session={session} />

@@ -133,7 +133,7 @@ const FormModal = ({
               },
             }}
           >
-            <MdClose size={24} /> 
+            <MdClose size={24} />
           </IconButton>
         </Box>
 
@@ -150,8 +150,16 @@ const FormModal = ({
             fullWidth // Makes the text field take the full width
             variant="outlined" // Apply the outlined style
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 17) {
+                setTitle(e.target.value); // Only update if the length is less than or equal to 17
+              }
+            }}
             required // Apply HTML required validation
+            helperText={
+              title.length >= 17 ? "Title must be less than 18 characters." : ""
+            } // Display helper text if the limit is reached
+            error={title.length >= 17} // Highlight the field in red if the limit is exceeded
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {

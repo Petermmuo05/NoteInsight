@@ -12,6 +12,7 @@ const ProgressBar = ({
   labelClass = "text-xs sm:text-sm md:text-base lg:text-[0.95rem]", // Label font size
 }) => {
   // Ensure progress is between 0 and 100
+
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (

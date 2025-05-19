@@ -40,7 +40,11 @@ export default function NoteList({
             )
           )
             res = false;
-          if (!(isOnlyFavorites == undefined || note.isFavorite == isOnlyFavorites))
+          if (
+            !(
+              isOnlyFavorites == undefined || note.isFavorite == isOnlyFavorites
+            )
+          )
             res = false;
           return res;
         })
@@ -61,12 +65,12 @@ export default function NoteList({
                     : `Lecture ${note.id}`}{" "}
                 </p>
                 <p className="text-[#666666] text-[13px] sm:text-[13px] md:text-[14px] lg:text-[14px]">
-                  {note.preview}...
+                  {note.preview.substring(0, 100)}...
                 </p>
               </div>
               <div className="px-4 py-2 bg-[#999999] w-fit text-white rounded-full shadow-md flex items-center justify-center gap-1">
                 <p className="sm:text-[14px] text-[13px] font-bold">
-                  {note.tag.name}
+                  {capitalizeFirstLetter(note.tag.name)}
                 </p>
               </div>{" "}
             </Link>
