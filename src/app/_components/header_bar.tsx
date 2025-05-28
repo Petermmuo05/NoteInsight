@@ -4,11 +4,13 @@ import { Playfair_Display_SC } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import Navbar from "../dashboard/navbar";
 import SettingsIcon from "../dashboard/settings_icon";
+import Logo from "../../../public/noteInsight_logo.png";
 import NotificationBell from "../dashboard/notification_icon";
 import ProfileMenu from "../note/[id]/ProfileMenu";
 import { Session } from "next-auth";
 import SettingsModal from "./SettingsModal";
 import { Tag } from "../_lib/definitions";
+import Image from "next/image";
 
 const playFair = Playfair_Display_SC({
   subsets: ["latin"],
@@ -43,21 +45,25 @@ export default function Header({
           : "bg-vanilla-cream"
       }  left-0 px-4 z-10 flex flex-row items-center justify-between w-full`}
     >
-      <h2
-        className={`text-2xl font-[800] ${playFair.className} text-[#1C2526]`}
-      >
-        NoteInsight
-      </h2>
-      <Navbar />
+      <div className="flex flex-row items-center gap-1">
+        <Image src={Logo} className="w-6" alt="logo" />
+        <h2
+          className={`text-2xl font-[800] ${playFair.className} text-[#1C2526]`}
+        >
+          NoteInsight
+        </h2>
+      </div>
+
+      {/* <Navbar /> */}
       <div className="flex flex-row items-center gap-2">
         <div className="hidden md:flex  w-8 h-8 items-center justify-center bg-white rounded-full">
           <SettingsIcon />
         </div>
-        <div className="hidden w-8 md:flex h-8 items-center justify-center bg-white rounded-full">
+        {/* <div className="hidden w-8 md:flex h-8 items-center justify-center bg-white rounded-full">
           <NotificationBell />
-        </div>
+        </div> */}
         <div className="flex items-center gap-2">
-          <ProfileMenu session={session}/>
+          <ProfileMenu session={session} />
           {userName && (
             <p className="hidden md:inline text-md font-bold ">
               Hi,

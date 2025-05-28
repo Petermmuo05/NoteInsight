@@ -63,7 +63,9 @@ const FilterMenu = ({ tags }: { tags: Tag[] }) => {
         slotProps={{
           paper: {
             sx: {
+              backgroundColor: "gray",
               borderRadius: "12px",
+              marginTop: "12px",
               padding: "10px", // Adjust padding for better spacing
               boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)", // Softer shadow
               background: "#f9f9f9", // Light background
@@ -86,7 +88,7 @@ const FilterMenu = ({ tags }: { tags: Tag[] }) => {
         </div>
 
         {/* Favorites Toggle */}
-        <div className="w-full px-3 py-2 gap-2 text-[14px] mb-2 text-gray-800  cursor-pointer transition-colors duration-200 ease-in-out flex justify-between items-center rounded-lg">
+        <div className="w-full px-5 py-2 gap-2 text-[14px] mb-2 text-gray-800  cursor-pointer transition-colors duration-200 ease-in-out flex justify-between items-center rounded-lg">
           <span>Favorites</span>
           <Switch
             checked={isOnlyFavorites}
@@ -109,24 +111,32 @@ const FilterMenu = ({ tags }: { tags: Tag[] }) => {
             <Select
               labelId="category-select-label"
               id="category-select"
-              value={selectedTag}
-              onChange={(event) => setSelectedTag(event.target.value as number)}
+              value={selectedTag == undefined ? -1 : selectedTag}
+              onChange={(event) =>
+                setSelectedTag(
+                  (event.target.value as number) == -1
+                    ? undefined
+                    : (event.target.value as number)
+                )
+              }
               displayEmpty
               sx={{
                 height: "40px", // Match height of the Favorites div
                 backgroundColor: "transparent", // Transparent background
                 border: "none", // Remove border for a cleaner look
                 "& .MuiSelect-select": {
-                  padding: "5px", // Remove padding for alignment
+                  padding: "10px", // Remove padding for alignment
                 },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--color-dark-gray) !important",
+                },
+                fontSize: "14px",
                 "&:hover": {
                   backgroundColor: "#f0f0f0", // Add hover effect
                 },
               }}
             >
-              <MenuItem value="" disabled>
-                Select Category
-              </MenuItem>
+              <MenuItem value={-1}>All</MenuItem>
               {tags.map((cat) => (
                 <MenuItem key={cat.id} value={cat.id}>
                   {capitalizeFirstLetter(cat.name)}

@@ -11,6 +11,7 @@ import { deleteNoteById } from "@/app/_lib/actions/dashboard/action";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/app/dashboard/modal_context";
 import { useFormModal } from "./ModalContext";
+import NoteOptions from "@/app/_components/NoteOptions";
 
 export default function NoteHeading({
   note,
@@ -32,10 +33,9 @@ export default function NoteHeading({
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  async function handleDeleteNote(
-    event: React.MouseEvent<HTMLImageElement, MouseEvent>
-  ): Promise<void> {
-    event.stopPropagation();
+  async function handleDeleteNote(): Promise<void> {
+    // event: React.MouseEvent<HTMLImageElement, MouseEvent>
+    // event.stopPropagation();
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this note?"
     );
@@ -43,8 +43,8 @@ export default function NoteHeading({
       // Logic to delete the note, e.g., calling an API or updating state
       startLoading();
       await deleteNoteById(note.id, token);
-      stopLoading();
       router.push("/dashboard");
+      stopLoading();
       console.log(`Note with ID ${note.id} has been deleted.`);
     }
   }
@@ -78,19 +78,34 @@ export default function NoteHeading({
             <p className="font-bold hidden lg:inline ">View Summary</p>
           </div>
         ) : (
+          // <>
+
+          //   <MdEdit
+          //     onClick={openModal}
+          //     className="text-[1.5rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.5rem] cursor-pointer active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out"
+          //   />
+
+          //   <NoteStar note={note} token={token} />
+          //   <Image
+          //     src={Trash}
+          //     className=" w-[1.7rem] sm:w-[1.8rem] md:w-[2.1rem] lg:w-[2.5rem]  active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out cursor-pointer"
+          //     alt="trash"
+          //     onClick={handleDeleteNote}
+          //   />
+          // </>
           <>
-            {" "}
-            <MdEdit
-              onClick={openModal}
+            <NoteOptions
+              note={note}
+              token={token}
+              handleEdit={openModal}
+              handleDelete={handleDeleteNote}
+            />
+            {/* <MdEdit
+              onClick={() => {
+
+              }}
               className="text-[1.5rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.5rem] cursor-pointer active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out"
-            />
-            <NoteStar note={note} token={token} />
-            <Image
-              src={Trash}
-              className=" w-[1.7rem] sm:w-[1.8rem] md:w-[2.1rem] lg:w-[2.5rem]  active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out cursor-pointer"
-              alt="trash"
-              onClick={handleDeleteNote}
-            />
+            /> */}
           </>
         )}
       </div>

@@ -36,7 +36,8 @@ export default function FrostedGlassBox({ note }: { note: NoteData }) {
       </div>
       <div className="w-full flex flex-col justify-center h-full gap-1">
         <p className="leading-[100%] text-[14px] sm:text-[16px] font-bold">
-          {note.fileName}
+          {note.fileName.slice(0, 26)}
+          {note.fileName.length > 26 && "..."}
         </p>
         <p className="text-[12px] sm:text-sm leading-[100%]">Document</p>
       </div>

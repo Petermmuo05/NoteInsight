@@ -16,10 +16,10 @@ import {
   Button, // For the submit button
   IconButton, // For the close button
 } from "@mui/material";
-import { useFormModal } from "./ModalContext";
+import { useFormModal } from "./ModalContext"; // Assuming this is the correct context for FormModal
 import { UpdateNoteTitle } from "@/app/_lib/actions/dashboard/action";
 import { Tag } from "@/app/_lib/definitions";
-import { useModal } from "@/app/dashboard/modal_context";
+import { useModal } from "@/app/dashboard/modal_context"; // This context is also imported, ensure it's distinct or used correctly
 import toast from "react-hot-toast";
 
 const FormModal = ({
@@ -35,12 +35,23 @@ const FormModal = ({
   noteTag: Tag;
   tags: Tag[];
 }) => {
-  const { isModalOpen, closeModal } = useFormModal();
+  const { isModalOpen, closeModal } = useFormModal(); // Original closeModal from context
   const [title, setTitle] = useState<string>("");
-  const [category, setCategory] = useState<number | null>(null); // State for the select field
-  const { startLoading, stopLoading } = useModal();
+  const [category, setCategory] = useState<number | null>(null);
+  const { startLoading, stopLoading } = useModal(); // Assuming this is a general loading context
 
-  // Define available categories for the select dropdown
+  // State for modal closing animation
+  const [closing, setClosing] = useState<boolean>(false);
+
+  // Handle closing the modal with animation
+  const handleAnimatedClose = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setClosing(false);
+      closeModal(); // Call the original closeModal from useFormModal context
+    }, 300); // Duration of the closing animation (e.g., 300ms)
+  };
+
   function capitalizeFirstLetter(str: string) {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -50,60 +61,74 @@ const FormModal = ({
     event.preventDefault();
 
     if (category === null) {
+      // Potentially show an error toast or message
+      toast.error("Please select a category.");
       return;
     }
 
-    startLoading(); // Start loading animation or state
+    startLoading();
 
     try {
       await UpdateNoteTitle(noteId, { title, id: category }, token);
       console.log("Form submitted:", { title, id: category });
-      closeModal(); // Close the modal on successful submit
-      toast.success("Note updated successfully!"); // Show success message
+      handleAnimatedClose(); // Use animated close on successful submit
+      toast.success("Note updated successfully!");
     } catch (error) {
       console.error("Error updating note:", error);
       toast.error("Failed to update note.");
     } finally {
-      stopLoading(); // Always stop loading regardless of success or failure
+      stopLoading();
     }
   };
 
   useEffect(() => {
-    if (noteTag) {
-      setCategory(noteTag.id); // Set the category to the id of the first tag
+    if (isModalOpen) {
+      // Reset fields when modal opens based on props
+      if (noteTag) {
+        setCategory(noteTag.id);
+      } else {
+        setCategory(null);
+      }
+      if (noteTitle) {
+        setTitle(noteTitle);
+      } else {
+        setTitle("");
+      }
     }
-    if (noteTitle) {
-      setTitle(noteTitle); // Set the title to the note's title
-    } else {
-      setTitle(""); // Reset title if no note title is provided
-    }
-  }, [noteTitle, noteTag]); // Dependency array to run effect when tags change
+  }, [isModalOpen, noteTitle, noteTag]); // Rerun when modal opens or relevant props change
 
   return (
     <Modal
       open={isModalOpen}
-      onClose={closeModal} // Allow closing by clicking outside or pressing Escape
+      onClose={handleAnimatedClose} // Use animated close for backdrop click or Escape key
       aria-labelledby="form-modal-title"
       aria-describedby="form-modal-description"
+      // If you want to style the backdrop similarly to the first example:
+      // slotProps={{
+      //   backdrop: {
+      //     className: "custom-backdrop", // Ensure this class is defined in your CSS
+      //   },
+      // }}
     >
       {/* MUI Box component replaces the outer div */}
       <Box
+        // Apply conditional class names for animation
+        className={closing ? "modal-closing-note" : "modal-animate-note"}
         sx={{
-          position: "absolute", // Type assertion for literal string 'absolute'
+          position: "absolute", // Type assertion
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 300, // Fixed width, matches w-[300px]
-          maxWidth: "90%", // Optional: Add max-width for smaller screens
-
-          // Gray Color Scheme and Appearance
-          bgcolor: "var(--color-vanilla-cream)", // Using your light background color variable
-          color: "var(--color-like-gray)", // Using your dark text color variable
-          borderRadius: "12px", // Rounded corners, matches rounded-xl approximately
-          border: "none", // No border, matches border-0
-          p: 3, // Padding, MUI spacing unit is 8px, so 3*8=24px, matches p-6 approx
-          boxShadow: 24, // MUI shadow level
-          outline: "none", // Remove the default focus outline on the modal content box
+          transform: "translate(-50%, -50%)", // This will be the base for animation transforms
+          width: 300,
+          maxWidth: "90%",
+          bgcolor: "var(--color-vanilla-cream)",
+          color: "var(--color-like-gray)",
+          borderRadius: "12px",
+          border: "none",
+          p: 3,
+          boxShadow: 24,
+          outline: "none",
+          // Animation classes will handle opacity and scale changes
         }}
       >
         {/* Modal Header */}
@@ -117,19 +142,17 @@ const FormModal = ({
             id="form-modal-title"
             variant="h6"
             component="h2"
-            sx={{ fontWeight: "bold" /* Matches font-bold */ }}
+            sx={{ fontWeight: "bold" }}
           >
             Edit Note
           </Typography>
-          {/* MUI IconButton replaces the native close button */}
           <IconButton
             aria-label="close"
-            onClick={closeModal}
+            onClick={handleAnimatedClose} // Use animated close for the 'X' button
             sx={{
-              color: "var(--color-medium-gray)" /* Matches text-gray-600 */,
+              color: "var(--color-medium-gray)",
               "&:hover": {
-                color:
-                  "var(--color-dark-gray)" /* Matches hover:text-black (using your dark gray) */,
+                color: "var(--color-dark-gray)",
               },
             }}
           >
@@ -138,76 +161,66 @@ const FormModal = ({
         </Box>
 
         {/* Modal Form */}
-        {/* The form element is kept to handle onSubmit */}
         <form onSubmit={handleSubmit}>
-          {/* Note Title Field - MUI TextField */}
           <TextField
-            autoFocus // Focus automatically on mount
-            margin="dense" // Adds some vertical margin
+            autoFocus
+            margin="dense"
             id="title"
-            label="Title" // Label for the input
+            label="Title"
             type="text"
-            fullWidth // Makes the text field take the full width
-            variant="outlined" // Apply the outlined style
+            fullWidth
+            variant="outlined"
             value={title}
             onChange={(e) => {
               if (e.target.value.length <= 17) {
-                setTitle(e.target.value); // Only update if the length is less than or equal to 17
+                setTitle(e.target.value);
               }
             }}
-            required // Apply HTML required validation
+            required
             helperText={
               title.length >= 17 ? "Title must be less than 18 characters." : ""
-            } // Display helper text if the limit is reached
-            error={title.length >= 17} // Highlight the field in red if the limit is exceeded
+            }
+            error={title.length >= 17}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "var(--color-dark-gray)", // Change outline to dark gray on focus
+                  borderColor: "var(--color-dark-gray)",
                 },
               },
               "& .MuiInputLabel-root": {
                 "&.Mui-focused": {
-                  color: "var(--color-dark-gray)", // Change label color to dark gray on focus
+                  color: "var(--color-dark-gray)",
                 },
               },
             }}
           />
 
-          {/* Category Select Field - MUI Select */}
-          {/* FormControl wraps InputLabel and Select */}
           <FormControl fullWidth margin="normal">
-            {" "}
-            {/* margin="normal" adds standard top/bottom margin */}
             <InputLabel
               id="category-select-label"
               sx={{
                 "&.Mui-focused": {
-                  color: "var(--color-dark-gray)", // Change label color to dark gray on focus
+                  color: "var(--color-dark-gray)",
                 },
               }}
             >
               Category
-            </InputLabel>{" "}
-            {/* Label for the select */}
+            </InputLabel>
             <Select
-              labelId="category-select-label" // Connects the label to the select
+              labelId="category-select-label"
               id="category-select"
-              value={category} // Controlled component value
-              label="Category" // Required for Outlined and Filled variants of Select for proper label rendering
+              value={category === null ? "" : category} // Handle null value for Select display
+              label="Category"
               onChange={(event) => {
-                // Cast the value from the event to number
                 setCategory(event.target.value as number);
               }}
               required
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "var(--color-dark-gray)", // Change outline to dark gray on focus
-                  },
-                },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "var(--color-dark-gray)", // Ensure the outline is gray by default
+                  // borderColor: "var(--color-dark-gray)", // Standard border color
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--color-dark-gray) !important",
                 },
               }}
             >
@@ -219,29 +232,22 @@ const FormModal = ({
             </Select>
           </FormControl>
 
-          {/* Submit Button - MUI Button */}
           <Button
-            type="submit" // Make it a submit button
-            variant="contained" // Use the contained (filled) style
-            fullWidth // Make the button full width
+            type="submit"
+            variant="contained"
+            fullWidth
             sx={{
-              mt: 3, // Margin top, roughly matches mt-5 (MUI spacing 3*8px=24px)
-              // Translate Tailwind classes to MUI sx styles
-              bgcolor: "var(--color-dark-gray)", // Background color using your variable
-              color: "var(--color-vanilla-cream)", // Text color using your light variable
-              fontWeight: "medium", // Font weight
-              py: "12px", // Vertical padding (approx py-3) - Can use theme.spacing() if you have theme access
-              borderRadius: "9999px", // Fully rounded button, matches rounded-full
-              boxShadow: "0px 4px 8px rgba(0,0,0,0.2)", // Example shadow, matches shadow-[0px_4px_8px_rgba(0,0,0,0.2)]
-              // Hover styles
+              mt: 3,
+              textTransform: "capitalize",
+              bgcolor: "var(--color-dark-gray)",
+              color: "var(--color-vanilla-cream)",
+              fontWeight: "medium",
+              py: "12px",
+              borderRadius: "9999px",
+              boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
               "&:hover": {
-                bgcolor: "var(--color-like-gray)", // Darker gray on hover
+                bgcolor: "var(--color-like-gray)",
               },
-              // Optional: Responsive padding/margin if needed, translating max-sm classes
-              // '@media (max-width: 600px)': { // MUI's 'sm' breakpoint is 600px
-              //   mt: 1.5, // max-sm:mt-3 approx
-              //   py: '16px', // max-sm:py-4 approx
-              // },
             }}
           >
             Submit

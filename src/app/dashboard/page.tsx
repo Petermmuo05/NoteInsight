@@ -8,9 +8,12 @@ import { auth } from "../_lib/auth";
 import LoadingScreen from "../note/[id]/LoadingScreen";
 import { getAllTags, getAllUserNotes } from "../_lib/actions/dashboard/action";
 import { NoteData } from "../_lib/definitions";
+import Nothing from "../../../public/not_found_1.png";
 
 import SearchBar from "./SearchBar";
 import NoteList from "./NoteList";
+import Image from "next/image";
+import Fab from "./fab";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -30,13 +33,23 @@ export default async function Dashboard() {
       <div
         className={`flex ${openSans} gap-4 flex-col bg-[#f9f8f6] scrollbar-hide text-[#1b140e] p-4 min-h-screen`}
       >
-        <Header session={session} tags={tags}/>
+        <Header session={session} tags={tags} />
         <div className="w-full mt-16 cursor-pointer  flex gap-2 sm:justify-end">
           <SearchBar tags={tags} />
           <AttachFile session={session} />
           <AttachModal session={session} />
         </div>
-        <NoteList notes={notes} session={session} />
+        {notes.length > 0 ? (
+          <NoteList notes={notes} session={session} />
+        ) : (
+          <>
+            <div className="w-full flex-1 flex flex-col gap-2 items-center justify-center no-select rounded-lg">
+              <Image src={Nothing} alt="No Notes Found" />
+              <p className="font-bold text-xl text-[#060807]">No Notes Yet</p>
+            </div>
+            <Fab />
+          </>
+        )}
       </div>
       <LoadingScreen />
     </ModalProvider>

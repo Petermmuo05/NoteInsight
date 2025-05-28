@@ -5,16 +5,17 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface ModalContextType {
   isModalOpen: boolean;
   isUploading: boolean;
-  isOnlyFavorites: boolean | undefined;
+  isOnlyFavorites: boolean;
+  isCreatingNote: boolean;
   selectedTag: number | undefined;
   setSelectedTag: React.Dispatch<React.SetStateAction<number | undefined>>;
   titleFilter: string;
   setTitleFilter: React.Dispatch<React.SetStateAction<string>>;
-  setIsOnlyFavorites: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  setIsOnlyFavorites: React.Dispatch<React.SetStateAction<boolean>>;
   closeFilter: () => void;
   onlyFavorites: () => void;
   notOnlyFavorites: () => void;
-  startLoading: () => void;
+  startLoading: (isNote?: boolean) => void;
   stopLoading: () => void;
   openModal: () => void;
   closeModal: () => void;
@@ -40,20 +41,26 @@ interface ModalProviderProps {
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUploading, setUploading] = useState<boolean>(false);
-  const [isOnlyFavorites, setIsOnlyFavorites] = useState<boolean | undefined>(
-    undefined
-  );
+  const [isCreatingNote, setCreatingNote] = useState<boolean>(false);
+
+  const [isOnlyFavorites, setIsOnlyFavorites] = useState<boolean>(false);
   const [selectedTag, setSelectedTag] = useState<number | undefined>(undefined);
   const [titleFilter, setTitleFilter] = useState<string>("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const startLoading = () => setUploading(true);
-  const stopLoading = () => setUploading(false);
+  const startLoading = (isNote: boolean = false) => {
+    setUploading(true);
+    setCreatingNote(isNote);
+  };
+  const stopLoading = () => {
+    setUploading(false);
+    setCreatingNote(false);
+  };
   const onlyFavorites = () => setIsOnlyFavorites(true);
   const notOnlyFavorites = () => setIsOnlyFavorites(false);
   const closeFilter = () => {
-    setIsOnlyFavorites(undefined);
+    setIsOnlyFavorites(false);
     setSelectedTag(undefined);
     setTitleFilter("");
   };
@@ -67,6 +74,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         startLoading,
         stopLoading,
         isUploading,
+        isCreatingNote,
         isOnlyFavorites,
         selectedTag,
         setSelectedTag,

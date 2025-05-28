@@ -42,7 +42,7 @@ const AttachModal = ({ session }: { session: Session | null }) => {
   async function uploadDocument(file: File) {
     const formData = new FormData();
     handleClose();
-    startLoading();
+    startLoading(true);
     console.log("trying to upload...");
     if (!file) return;
     console.log("still trying to upload",uploading);

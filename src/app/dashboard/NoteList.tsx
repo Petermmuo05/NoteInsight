@@ -40,11 +40,7 @@ export default function NoteList({
             )
           )
             res = false;
-          if (
-            !(
-              isOnlyFavorites == undefined || note.isFavorite == isOnlyFavorites
-            )
-          )
+          if (!(!isOnlyFavorites || note.isFavorite == isOnlyFavorites))
             res = false;
           return res;
         })

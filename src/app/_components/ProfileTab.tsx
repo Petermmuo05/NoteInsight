@@ -8,6 +8,8 @@ import {
   uploadProfilePicture,
 } from "../_lib/actions/dashboard/action"; // ✅ Add this
 import toast from "react-hot-toast";
+import { MdEdit } from "react-icons/md";
+
 
 export default function ProfileTab() {
   const { data: session, update } = useSession();
@@ -17,6 +19,16 @@ export default function ProfileTab() {
   const [imageUrl, setImageUrl] = useState(session?.user.image || null); // 👈 add user image
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+
+  useEffect(() => {
+    if (session?.user) {
+      setName(session.user.username || "");
+      setEmail(session.user.email || "");
+      setImageUrl(session.user.image || null);
+    }
+  }, [session]);
+
+  
   // useEffect to track changes in the name and email fields
   useEffect(() => {
     if (name !== session?.user.username || email !== session?.user.email) {
@@ -44,7 +56,7 @@ export default function ProfileTab() {
       console.error("Error updating user:", error);
       toast.error("Failed to update user");
     } finally {
-      toast.dismiss();
+      // toast.dismiss();
       setHasChanged(false);
     }
   };
@@ -59,7 +71,7 @@ export default function ProfileTab() {
 
     const formData = new FormData();
     formData.append("file", file);
-
+    let isUpload: boolean = false;
     try {
       toast.loading("Uploading image...");
       const url = await uploadProfilePicture(formData, session?.accessToken); // 👈 your backend handler
@@ -68,12 +80,17 @@ export default function ProfileTab() {
         user: { ...session?.user, image: url },
         accessToken: session?.accessToken,
       });
-      toast.success("Profile picture updated!");
+      isUpload = true;
     } catch (err) {
       console.error(err);
-      toast.error("Failed to upload image");
+      isUpload = false;
     } finally {
       toast.dismiss();
+      if (isUpload) {
+        toast.success("Profile picture updated!");
+      } else {
+        toast.error("Failed to upload image");
+      }
     }
   };
 
@@ -82,7 +99,7 @@ export default function ProfileTab() {
       <div className="w-full justify-center mb-3 flex">
         <div
           onClick={handleProfileImageClick}
-          className="w-[80px] h-[80px] bg-gray-400 rounded-full flex items-center justify-center overflow-hidden cursor-pointer"
+          className="w-[80px] relative h-[80px] bg-gray-400 rounded-full flex items-center justify-center overflow-hidden cursor-pointer"
         >
           <Image
             src={imageUrl || Profile}
@@ -90,6 +107,9 @@ export default function ProfileTab() {
             height={80}
             alt="Profile"
           />
+          <div className="w-full h-full absolute bg-black hover:opacity-20 z-10 opacity-0 flex items-center justify-center">
+            <MdEdit className="text-[1.5rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.5rem] z-100 text-light-gray cursor-pointer active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out" />
+          </div>
           <input
             ref={fileInputRef}
             type="file"

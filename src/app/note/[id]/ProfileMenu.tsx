@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Menu, Grow } from "@mui/material";
 import Image from "next/image";
 import Profile from "../../../../public/profilehuman.jpg"; // Replace with your profile image path
-import { MdAccountCircle, MdLogout, MdSettings } from "react-icons/md";
+import { MdLogout, MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Session } from "next-auth";

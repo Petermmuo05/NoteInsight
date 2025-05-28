@@ -13,12 +13,11 @@ interface ErrorResponse {
 }
 
 export default function AttachFile({ session }: { session: Session | null }) {
-  const { openModal } = useModal();
+  const { openModal, stopLoading } = useModal();
   const client = useRef<Client | null>(null);
   const jwt = session?.accessToken;
-  const userEmail = session?.user.email;
+  // const userEmail = session?.user.email;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const { stopLoading } = useModal();
   const router = useRouter();
 
   useEffect(() => {
@@ -42,9 +41,10 @@ export default function AttachFile({ session }: { session: Session | null }) {
           );
 
           stompClient.subscribe("/user/queue/errors", (message: IMessage) => {
+            toast.error("Failed to create note- please try again.");
             stopLoading();
             const { error }: ErrorResponse = JSON.parse(message.body);
-            toast.error("Failed to create note; please try again.");
+            console.log("Is it sending the message");
             console.error("Error:", error);
           });
         },
@@ -65,7 +65,7 @@ export default function AttachFile({ session }: { session: Session | null }) {
         client.current = null;
       }
     };
-  }, [apiUrl, jwt, userEmail, stopLoading]);
+  }, [apiUrl, jwt]);
 
   return (
     <div

@@ -55,7 +55,7 @@ export default function NoteContent({ note }: { note: NoteData }) {
     </div>
   ) : (
     <div className="flex flex-col mt-2 pl-2 sm:pl-20 sm:mt-5 w-full h-full">
-      <div className="flex flex-col  w-full h-full gap-5 sm:gap-8 ">
+      <div className="flex flex-col  w-full h-full gap-12 sm:gap-8 ">
         <div className="flex flex-row items-center gap-3">
           {/* Assuming FrostedGlassBox uses note prop */}
           <FrostedGlassBox note={note} />
@@ -70,10 +70,10 @@ export default function NoteContent({ note }: { note: NoteData }) {
           </div>
         </div>
         <div className="w-full">
-          <h1 className="text-[1.4rem] sm:text-[1.5rem] md:text-[1.7rem] lg:text-[2rem]  font-bold">
+          <h1 className="text-[1.5rem] sm:text-[1.5rem] md:text-[1.7rem] lg:text-[2rem]  font-extrabold">
             Summary
           </h1>
-          <div className="summary text-lg mt-2 sm:mt-4 text-[14px] sm:text-[13px] md:text-[14px] lg:text-[16px]  font-normal">
+          <div className="summary text-lg mt-5 sm:mt-4 text-[14px] sm:text-[13px] md:text-[14px] lg:text-[16px]  font-normal">
             {/* 3. Use the state variable here */}
             {/* Add a check to ensure sanitizedSummaryHtml is not empty before rendering */}
             {sanitizedSummaryHtml ? (

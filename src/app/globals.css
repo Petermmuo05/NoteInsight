@@ -9,13 +9,13 @@
   --color-vanilla-cream: #f9f8f6;
 }
 
-.summary h2{
-  font-size:large;
+.summary h2 {
+  font-size: large;
   font-weight: 700;
 }
 
-.summary h3{
-  font-size:medium;
+.summary h3 {
+  font-size: medium;
   font-weight: 700;
 }
 
@@ -134,4 +134,91 @@
 ::selection {
   background-color: #cecdcc; /* your desired highlight color */
   color: #666666; /* text color inside selection */
+}
+
+/* Example CSS for modal animations */
+.modal-animate-note {
+  animation: fadeInScaleUp 0.3s ease-out forwards;
+  /* Or it could be a default state without specific intro animation */
+  /* opacity: 1; transform: translate(-50%, -50%) scale(1); */
+}
+
+.modal-closing-note {
+  animation: fadeOutScaleDown 0.3s ease-in forwards;
+}
+
+@keyframes fadeInScaleUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeOutScaleDown {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+/* Optional: Ensure backdrop fades out with modal if custom classes are used */
+.custom-backdrop {
+  /* Assuming you might add a similar class for consistency */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 90px;
+  height: 14px;
+  box-shadow: 0 3px 0 white;
+  position: relative;
+  clip-path: inset(-40px 0 -5px);
+}
+.loader:before {
+  content: "";
+  position: absolute;
+  inset: auto calc(50% - 17px) 0;
+  height: 50px;
+  --g: no-repeat linear-gradient(white 0 0);
+  background: var(--g), var(--g), var(--g), var(--g);
+  background-size: 16px 14px;
+  animation: l7-1 2s infinite linear, l7-2 2s infinite linear;
+}
+@keyframes l7-1 {
+  0%,
+  100% {
+    background-position: 0 -50px, 100% -50px;
+  }
+  17.5% {
+    background-position: 0 100%, 100% -50px, 0 -50px, 100% -50px;
+  }
+  35% {
+    background-position: 0 100%, 100% 100%, 0 -50px, 100% -50px;
+  }
+  52.5% {
+    background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% -50px;
+  }
+  70%,
+  98% {
+    background-position: 0 100%, 100% 100%, 0 calc(100% - 16px),
+      100% calc(100% - 16px);
+  }
+}
+@keyframes l7-2 {
+  0%,
+  70% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(200%);
+  }
 }

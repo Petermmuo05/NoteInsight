@@ -28,9 +28,7 @@ export default function SearchBar({ tags }: { tags: Tag[] }) {
         </div>
         <FilterMenu tags={tags} />
       </div>
-      {(isOnlyFavorites !== undefined ||
-        selectedTag !== undefined ||
-        titleFilter !== "") && (
+      {(isOnlyFavorites || selectedTag !== undefined || titleFilter !== "") && (
         <button
           onClick={closeFilter}
           className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200"
