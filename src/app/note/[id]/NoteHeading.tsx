@@ -1,11 +1,9 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import NoteStar from "./note_star";
-import Trash from "../../../../public/trash.svg";
 import File from "../../../../public/file3.svg";
 import { useQuiz } from "./QuizContext";
-import { MdArrowBack, MdQuiz, MdWest, MdEdit } from "react-icons/md";
+import { MdArrowBack, MdQuiz, MdWest } from "react-icons/md";
 import { NoteData } from "@/app/_lib/definitions";
 import { deleteNoteById } from "@/app/_lib/actions/dashboard/action";
 import { useRouter } from "next/navigation";

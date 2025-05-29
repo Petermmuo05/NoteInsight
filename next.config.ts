@@ -5,12 +5,13 @@ const nextConfig = {
       bodySizeLimit: "10mb",
     },
   },
+  transpilePackages: ["framer-motion"], // ✅ root-level key
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'fteoiycekhmzhyyohsbk.supabase.co',
-        pathname: '/storage/v1/object/public/**', // Optional: Restrict to public storage paths
+        protocol: "https",
+        hostname: "fteoiycekhmzhyyohsbk.supabase.co",
+        pathname: "/storage/v1/object/public/**", // Optional: Restrict to public storage paths
       },
     ],
   },

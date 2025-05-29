@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, useTheme, useMediaQuery } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion"; // Import AnimatePresence
 import {
   FaTimes,
   FaUser,
@@ -26,34 +27,42 @@ export default function SettingsModal({
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.get("modal") === "settings";
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [openNotMobile, setOpenNotMobile] = useState(false);
 
-  // --- Start of animation-related additions ---
-  const [closing, setClosing] = useState<boolean>(false);
+  // No need for openNotMobile state if its only purpose is to exclude mobile
+  // Mobile fallback is handled by SettingsDrawer
+  // const [openNotMobile, setOpenNotMobile] = useState(false);
+  // useEffect(() => {
+  //   setOpenNotMobile(isMobile);
+  // }, [isMobile]);
 
-  const handleAnimatedClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setClosing(false);
-      // Original closing logic
-      const params = new URLSearchParams(Array.from(searchParams.entries()));
-      params.delete("modal");
-      router.push(`?${params.toString()}`);
-    }, 300); // Duration should match your CSS animation
-  };
-  // --- End of animation-related additions ---
+  // Use a state to control the visibility of the Modal for desktop,
+  // independent of the framer-motion closing state.
+  // This will primarily be `isOpen && !isMobile`
+  const [showModalContent, setShowModalContent] = useState(false);
 
   useEffect(() => {
-    setOpenNotMobile(isMobile);
-  }, [isMobile]);
+    if (isOpen && !isMobile) {
+      setShowModalContent(true);
+    } else if (!isOpen && showModalContent) {
+      // This is the trigger for closing when isOpen becomes false
+      // AnimatePresence will handle the exit animation
+      // No need for a separate `closing` state or `setTimeout` here.
+      // The `onClose` prop of Modal will handle the URL update after animation.
+      // setShowModalContent(false); // This will be handled by AnimatePresence removal
+    }
+  }, [isOpen, isMobile, showModalContent]);
 
-  // Original closeModal is now part of handleAnimatedClose
-  // const closeModal = () => { ... };
+  const handleClose = () => {
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.delete("modal");
+    router.push(`?${params.toString()}`);
+    // setShowModalContent(false); // This is automatically handled by the router push changing `isOpen`
+  };
 
   const [activeTab, setActiveTab] = useState(0);
-
   const tabs = [
     { label: "Profile", icon: <FaUser /> },
     { label: "Appearance", icon: <FaPaintBrush /> },
@@ -62,146 +71,95 @@ export default function SettingsModal({
 
   return (
     <>
-      <Modal
-        open={isOpen && !openNotMobile}
-        onClose={handleAnimatedClose} // Use the new animated close handler
-        // Add backdrop class similar to the first example if needed
-        slotProps={{
-          backdrop: {
-            className: "custom-backdrop", // Ensure this class is defined in your CSS
-          },
-        }}
-      >
-        <div
-          // Apply animation classes and combine with existing/Tailwind styling
-          className={`
-            absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-[500px] md:w-[600px] hidden sm:flex flex-col overflow-hidden
-            bg-[#1F1F1F] rounded-[8px] shadow-2xl
-            ${closing ? "modal-closing" : "modal-animate"}
-          `}
-          style={{
-            // Height is kept as inline style as it was specific, or convert to Tailwind if preferred
-            height: 400,
-            // Removed other inline styles that are now covered by Tailwind classes
+      {/* Conditionally render Modal only for non-mobile and when it should be open */}
+      {!isMobile && (
+        <Modal
+          open={isOpen} // Control Modal's open state directly with `isOpen` from URL
+          onClose={handleClose} // Use the direct close handler
+          closeAfterTransition // Let MUI Modal handle its own transition logic (though AnimatePresence will override for its children)
+          slotProps={{
+            backdrop: { className: "custom-backdrop" },
           }}
         >
-          {/* Header */}
-          <div
-            style={{
-              // Keeping inline styles for header for brevity, can be converted to Tailwind
-              flexShrink: 0,
-              padding: "16px",
-              borderBottom: "1px solid #333",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <h2
-              style={{
-                margin: 0,
-                color: "#FFF",
-                fontSize: "18px",
-                flexGrow: 1,
-              }}
-            >
-              Settings
-            </h2>
-            <button
-              onClick={handleAnimatedClose} // Use the new animated close handler
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "#888",
-                cursor: "pointer",
-                padding: 4,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#FFF")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#888")}
-            >
-              <FaTimes size={20} />
-            </button>
-          </div>
-
-          {/* Body: sidebar + content */}
-          <div style={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
-            {/* Vertical Tabs */}
-            <nav
-              style={{
-                flexShrink: 0,
-                width: 160,
-                background: "#2A2A2A",
-                borderRight: "1px solid #333",
-                padding: "0 12px",
-                overflowY: "auto",
-              }}
-            >
-              {tabs.map((tab, idx) => (
-                <div
-                  key={tab.label}
-                  onClick={() => setActiveTab(idx)}
-                  style={{
-                    padding: "8px 16px",
-                    margin: "10px 0",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    color: activeTab === idx ? "#FFF" : "#AAA",
-                    background: activeTab === idx ? "#333" : "transparent",
-                    borderBottom: "1px solid #333",
-                    transition: "background 0.2s, color 0.2s",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "13px",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activeTab !== idx)
-                      e.currentTarget.style.background =
-                        "rgba(255,255,255,0.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeTab !== idx)
-                      e.currentTarget.style.background = "transparent";
-                  }}
-                >
-                  {tab.icon}
-                  {tab.label}
+          {/* AnimatePresence will handle mounting/unmounting with animations */}
+          <AnimatePresence>
+            {/* Render motion.div only when isOpen is true (or during exit animation) */}
+            {isOpen && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }} // This is the exit animation
+                transition={{ duration: 0.25 }}
+                className="
+                  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                  w-[500px] md:w-[600px] h-[400px]
+                  hidden sm:flex flex-col overflow-hidden
+                  bg-[#1F1F1F] rounded-[8px] shadow-2xl z-20
+                "
+              >
+                {/* Header */}
+                <div className="flex items-center px-4 py-3 border-b border-[#333] flex-shrink-0">
+                  <h2 className="flex-grow text-white text-lg m-0">Settings</h2>
+                  <button
+                    onClick={handleClose} // Use the direct close handler
+                    className="p-1 text-[#888] hover:text-white transition"
+                  >
+                    <FaTimes size={20} />
+                  </button>
                 </div>
-              ))}
-            </nav>
 
-            {/* Content */}
-            <div
-              className="scrollbar-hide"
-              style={{
-                flexGrow: 1,
-                padding: "12px",
-                color: "#EEE",
-                overflowY: "auto",
-              }}
-            >
-              {activeTab === 0 && <ProfileTab />}
-              {activeTab === 1 && (
-                <div className="flex flex-col w-full h-full">
-                  <h1 className="mb-3">Theme Preference</h1>
-                  <div className="flex flex-row w-full h-[30%] gap-4">
-                    <div className="w-full border border-white flex items-center rounded-2xl justify-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
-                      <FaMoon size={16} />
-                      Dark
-                    </div>
-                    <div className="w-full flex border border-white items-center rounded-2xl justify-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
-                      <FaSun size={16} />
-                      Light
-                    </div>
+                {/* Body */}
+                <div className="flex flex-grow overflow-hidden">
+                  {/* Sidebar Tabs */}
+                  <nav className="w-40 bg-[#2A2A2A] border-r border-[#333] px-3 py-2 overflow-y-auto flex-shrink-0">
+                    {tabs.map((tab, idx) => (
+                      <div
+                        key={tab.label}
+                        onClick={() => setActiveTab(idx)}
+                        className={`
+                          flex items-center gap-2 px-4 py-2 mb-2
+                          rounded-lg cursor-pointer text-sm
+                          transition-colors
+                          ${
+                            activeTab === idx
+                              ? "bg-[#333] text-white"
+                              : "text-[#AAA] hover:bg-white/5"
+                          }
+                        `}
+                      >
+                        {tab.icon}
+                        {tab.label}
+                      </div>
+                    ))}
+                  </nav>
+
+                  {/* Content */}
+                  <div className="flex-grow p-4 text-[#EEE] overflow-y-auto">
+                    {activeTab === 0 && <ProfileTab />}
+                    {activeTab === 1 && (
+                      <div className="flex flex-col h-full">
+                        <h3 className="mb-3">Theme Preference</h3>
+                        <div className="flex gap-4 h-1/3">
+                          <div className="flex-1 flex items-center justify-center gap-2 border border-white rounded-2xl cursor-pointer hover:bg-gray-800 transition-colors p-2">
+                            <FaMoon size={16} /> Dark
+                          </div>
+                          <div className="flex-1 flex items-center justify-center gap-2 border border-white rounded-2xl cursor-pointer hover:bg-gray-800 transition-colors p-2">
+                            <FaSun size={16} /> Light
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 2 && <TagTab tags={tags} token={token} />}
                   </div>
                 </div>
-              )}
-              {activeTab === 2 && <TagTab tags={tags} token={token} />}
-            </div>
-          </div>
-        </div>
-      </Modal>
-      {isOpen && <SettingsDrawer tags={tags} token={token} />}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Modal>
+      )}
+
+      {/* Mobile fallback: Render SettingsDrawer always if isOpen and on mobile */}
+      {isOpen && isMobile && <SettingsDrawer tags={tags} token={token} />}
     </>
   );
 }

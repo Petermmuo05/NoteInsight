@@ -11,6 +11,7 @@ import { Session } from "next-auth";
 import SettingsModal from "./SettingsModal";
 import { Tag } from "../_lib/definitions";
 import Image from "next/image";
+import Link from "next/link";
 
 const playFair = Playfair_Display_SC({
   subsets: ["latin"],
@@ -45,14 +46,14 @@ export default function Header({
           : "bg-vanilla-cream"
       }  left-0 px-4 z-10 flex flex-row items-center justify-between w-full`}
     >
-      <div className="flex flex-row items-center gap-1">
+      <Link href={"/dashboard"} className="flex flex-row items-center gap-1">
         <Image src={Logo} className="w-6" alt="logo" />
         <h2
           className={`text-2xl font-[800] ${playFair.className} text-[#1C2526]`}
         >
           NoteInsight
         </h2>
-      </div>
+      </Link>
 
       {/* <Navbar /> */}
       <div className="flex flex-row items-center gap-2">

@@ -45,7 +45,7 @@ export default function Star({
     <FaStar
       size={size}
       className={`cursor-pointer active:scale-90 hover:scale-102 ${`w-${size}`} transition-all duration-200 ease-in-out ${
-        active ? "text-black" : "text-white stroke-black stroke-[15] "
+        active ? "text-[#d8f999]" : "text-white stroke-[#d8f999] stroke-[15] "
       }`}
       onClick={(e) => {
         handleUpdateNote(e);

@@ -89,7 +89,7 @@ const ProfileMenu = ({ session }: { session: Session | null }) => {
         </div>
         <div className="w-full px-2 py-4 gap-1 h-6 text-[14px] text-white hover:bg-[#aeaeae] cursor-pointer transition-colors duration-200 ease-in-out flex items-center rounded-lg">
           <MdLogout className="" />
-          <Link href="api/auth/signout">Log Out</Link>
+          <Link href="/api/auth/signout">Log Out</Link>
         </div>
       </Menu>
     </div>
