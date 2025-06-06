@@ -7,10 +7,17 @@ import FlashCard from "./FlashCard";
 import { useQuiz } from "./QuizContext";
 import { NoteData } from "@/app/_lib/definitions";
 import DOMPurify from "dompurify"; // For sanitizing HTML
+import axios from "axios";
 
 // Import NoteSummary is commented out, so ignoring for now
 
-export default function NoteContent({ note }: { note: NoteData }) {
+export default function NoteContent({
+  note,
+  token,
+}: {
+  note: NoteData;
+  token: string | undefined;
+}) {
   const {
     isQuizOpen,
     openQuiz,
@@ -46,8 +53,38 @@ export default function NoteContent({ note }: { note: NoteData }) {
     // The effect depends on the 'note' object, so it re-runs if the note data changes
   }, [note]);
 
-  // The rest of your component logic remains the same,
-  // but the dangerouslySetInnerHTML now uses the state variable.
+  const exportHtml = async (htmlContent: string, format: "pdf" | "word") => {
+    try {
+      const response = await axios.post(
+        // Note: your Spring Boot URL (no "/api" prefix unless you proxy)
+        `${process.env.NEXT_PUBLIC_API_URL}/export/${format}`,
+
+        // We send raw HTML as the POST body
+        htmlContent,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "text/html",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Turn the response into a download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      const extension = format === "pdf" ? "pdf" : "docx";
+      link.setAttribute("download", `exported-document.${extension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
+  };
+
   return isQuizOpen ? (
     <div className="flex mt-2 sm:mt-5 w-full h-full">
       {/* Assuming note.quiz maps correctly to the quizList prop expected by FlashCard */}
@@ -58,7 +95,12 @@ export default function NoteContent({ note }: { note: NoteData }) {
       <div className="flex flex-col  w-full h-full gap-12 sm:gap-8 ">
         <div className="flex flex-row items-center gap-3">
           {/* Assuming FrostedGlassBox uses note prop */}
-          <FrostedGlassBox note={note} />
+          <FrostedGlassBox
+            note={note}
+            handleClick={(format: "pdf" | "word") =>
+              exportHtml(note.summary.summaryText, format)
+            }
+          />
           <div className="flex justify-center gap-1 items-center">
             <Tooltip title="Quiz" arrow>
               <MdQuiz

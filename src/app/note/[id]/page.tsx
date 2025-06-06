@@ -38,7 +38,7 @@ export default async function Note({ params }: { params: { id: string } }) {
             <Header session={session} tags={tags} />
             <div className="flex flex-col  gap-6 sm:gap-4 mt-20 sm:mt-24 w-full  sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
               <NoteHeading note={noteData} token={session?.accessToken} />
-              <NoteContent note={noteData} />
+              <NoteContent note={noteData} token={session?.accessToken} />
             </div>
           </div>
           <LoadingScreen />

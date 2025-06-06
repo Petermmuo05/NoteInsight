@@ -212,12 +212,12 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
       </motion.header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 text-center">
+      <section className="sm:pt-32 pt-28  pb-20 px-6 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-5xl font-extrabold mt-6 md:mt-3 md:px-[250px]"
+          className="sm:text-5xl text-4xl font-extrabold mt-6 md:mt-3 md:px-[250px]"
         >
           Revolutionize Your Study Routine with AI
         </motion.h1>
@@ -253,8 +253,10 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6">
-        <h2 className="text-4xl font-bold text-center mb-12">Key Features</h2>
+      <section id="features" className="sm:py-20 py-12 px-6">
+        <h2 className="sm:text-4xl text-3xl font-bold text-center mb-12">
+          Key Features
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
@@ -275,8 +277,11 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
       </section>
 
       {/* Designed for You Section */}
-      <section id="designed-for-you" className="py-20 px-6 bg-[#f9f8f6]/50">
-        <h2 className="text-4xl font-bold text-center mb-12">
+      <section
+        id="designed-for-you"
+        className="sm:py-20 py-12 px-6 bg-[#f9f8f6]/50"
+      >
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Designed for You
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -310,8 +315,10 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
       </section>
 
       {/* Workflow Showcase */}
-      <section id="workflow" className="py-20 px-6 bg-[#f9f8f6]/50">
-        <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
+      <section id="workflow" className="sm:py-20 py-12 px-6 bg-[#f9f8f6]/50">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          How It Works
+        </h2>
         <div className="max-w-4xl mx-auto space-y-12">
           {workflowSteps.map((step, index) => (
             <motion.div
@@ -329,15 +336,15 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
                   height={150}
                 />
               </div>
-              <p className="w-2/3 text-lg">{step}</p>
+              <p className="w-2/3 sm:text-lg text-sm">{step}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-6">
-        <h2 className="text-4xl font-bold text-center mb-12">What Users Say</h2>
+      <section id="testimonials" className="sm:py-20 py-12 px-6">
+        <h2 className="sm:text-4xl text-3xl font-bold text-center mb-12">What Users Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {testimonials.map((testimonial, index) => (
             <motion.div
@@ -355,7 +362,7 @@ export default function LandingContent({ fontStyle }: { fontStyle: string }) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 text-center">
+      <section className="sm:py-20 py-12 px-6 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
