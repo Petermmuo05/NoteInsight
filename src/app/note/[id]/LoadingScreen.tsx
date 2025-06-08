@@ -5,7 +5,12 @@ import React, { useEffect, useState } from "react";
 export default function LoadingScreen() {
   const { isUploading, isCreatingNote } = useModal();
 
-  const steps = ["Analyzing document", "Generating Summary", "Working on Quiz"];
+  const steps = [
+    "Analyzing document",
+    "Generating Summary",
+    "Working on Quiz",
+    "Organizing Notes",
+  ];
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -14,6 +19,7 @@ export default function LoadingScreen() {
     const timeouts = [
       setTimeout(() => setStep(1), 2000),
       setTimeout(() => setStep(2), 4000),
+      setTimeout(() => setStep(3), 8000),
     ];
     return () => timeouts.forEach(clearTimeout);
   }, [isUploading, isCreatingNote]);
@@ -26,13 +32,13 @@ export default function LoadingScreen() {
         {/* Loader and text */}
         <div className="relative z-10 flex flex-col items-center">
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce [animation-duration:0.5s] [animation-delay:-0.3s]"></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce [animation-duration:0.5s] [animation-delay:-0.15s]"></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce [animation-duration:0.5s]"></div>
+            <div className="w-3 h-3 bg-[#d8f999] rounded-full animate-bounce [animation-duration:0.5s] [animation-delay:-0.3s]"></div>
+            <div className="w-3 h-3 bg-[#d8f999] rounded-full animate-bounce [animation-duration:0.5s] [animation-delay:-0.15s]"></div>
+            <div className="w-3 h-3 bg-[#d8f999] rounded-full animate-bounce [animation-duration:0.5s]"></div>
           </div>
           {isCreatingNote && (
-            <div className="mt-6 text-sm text-white drop-shadow z-10">
-              {steps[step]}...
+            <div className="mt-6 text-[16px] font-extrabold text-[#bcd88a] drop-shadow z-10">
+              {steps[step]} ...
             </div>
           )}
         </div>

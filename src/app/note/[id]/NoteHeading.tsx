@@ -51,7 +51,7 @@ export default function NoteHeading({
     <div className="flex no-select flex-row justify-between items-center ">
       <div className="flex flex-row items-center">
         {isQuizOpen ? (
-          <MdQuiz className="text-[2.7rem] sm:text-[2.8rem] md:text-[3.2rem]  lg:text-[4rem] cursor-pointer" />
+          <MdQuiz className="text-[2.7rem] sm:text-[2.8rem] md:text-[3.2rem]  lg:text-[4rem] cursor-pointer mr-1" />
         ) : (
           <Image
             src={File}

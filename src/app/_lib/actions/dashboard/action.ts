@@ -212,11 +212,12 @@ export async function UpdateNoteTitle(
 
 export async function UploadFile(
   formData: FormData,
-  token: string | undefined
+  token: string | undefined,
+  promptKey: number
 ) {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/note/summarize`,
+      `${process.env.NEXT_PUBLIC_API_URL}/note/summarize/${promptKey}`,
       formData,
       {
         headers: {

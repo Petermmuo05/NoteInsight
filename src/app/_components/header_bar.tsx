@@ -55,7 +55,7 @@ export default function Header({
         </h2>
       </Link>
 
-      {/* <Navbar /> */}
+      <Navbar />
       <div className="flex flex-row items-center gap-2">
         <div className="hidden md:flex  w-8 h-8 items-center justify-center bg-white rounded-full">
           <SettingsIcon />

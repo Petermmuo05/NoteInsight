@@ -44,6 +44,11 @@ export default function NoteList({
             res = false;
           return res;
         })
+        .sort((a, b) => {
+          if (a.isFavorite && !b.isFavorite) return -1;
+          if (!a.isFavorite && b.isFavorite) return 1;
+          return 0;
+        })
         .map((note) => (
           <div
             key={note.id}

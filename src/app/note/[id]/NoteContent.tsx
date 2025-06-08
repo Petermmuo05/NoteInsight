@@ -119,7 +119,9 @@ export default function NoteContent({
             {/* 3. Use the state variable here */}
             {/* Add a check to ensure sanitizedSummaryHtml is not empty before rendering */}
             {sanitizedSummaryHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: sanitizedSummaryHtml }} />
+              <div
+                dangerouslySetInnerHTML={{ __html: sanitizedSummaryHtml }}
+              />
             ) : (
               // Optional: Display a loading message or placeholder if summary is not yet processed
               <p>Loading summary...</p> // Or handle error display if needed

@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import { Modal } from "@mui/material";
 import { useModal } from "./modal_context";
 import { UploadFile } from "../_lib/actions/dashboard/action";
 import { Session } from "next-auth";
+import { FaFile } from "react-icons/fa";
 
 const AttachModal = ({ session }: { session: Session | null }) => {
   const { isModalOpen, closeModal } = useModal();
@@ -13,7 +14,7 @@ const AttachModal = ({ session }: { session: Session | null }) => {
   const [file, setFile] = useState<File | null>(null); // Changed to a single file
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jwt = session?.accessToken;
-  const {startLoading}=useModal();
+  const { startLoading } = useModal();
 
   // Handle closing the modal with animation
   const handleClose = () => {
@@ -39,17 +40,17 @@ const AttachModal = ({ session }: { session: Session | null }) => {
     setIsDragging(false);
   };
 
-  async function uploadDocument(file: File) {
+  async function uploadDocument(file: File, promptKey: number) {
     const formData = new FormData();
     handleClose();
     startLoading(true);
     console.log("trying to upload...");
     if (!file) return;
-    console.log("still trying to upload",uploading);
+    console.log("still trying to upload", uploading);
     formData.append("file", file);
     try {
       setUploading(true);
-      await UploadFile(formData, jwt);
+      await UploadFile(formData, jwt, promptKey);
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
@@ -63,11 +64,9 @@ const AttachModal = ({ session }: { session: Session | null }) => {
     e.stopPropagation();
     setIsDragging(false);
 
-
     const droppedFile = e.dataTransfer.files[0]; // Only take the first file
     if (validateFileType(droppedFile)) {
       setFile(droppedFile); // Set the single file
-      uploadDocument(droppedFile);
     } else {
       alert("Only Word, PDF, or text files are allowed.");
     }
@@ -78,8 +77,6 @@ const AttachModal = ({ session }: { session: Session | null }) => {
     const selectedFile = e.target.files?.[0]; // Only take the first file
     if (selectedFile && validateFileType(selectedFile)) {
       setFile(selectedFile); // Set the single file
-
-      uploadDocument(selectedFile);
     } else {
       alert("Only Word, PDF, or text files are allowed.");
     }
@@ -118,7 +115,9 @@ const AttachModal = ({ session }: { session: Session | null }) => {
       >
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-medium">Attach</h2>
+          <h2 className="text-xl font-medium">
+            {file ? "Select summary style ✨" : "Attach"}
+          </h2>
           <button onClick={handleClose} className="text-white text-lg">
             ✕
           </button>
@@ -133,33 +132,64 @@ const AttachModal = ({ session }: { session: Session | null }) => {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <div className="w-12 h-12 rounded-full bg-[#4A5657] flex justify-center items-center mb-3">
-            <span className="text-2xl">📷</span>
-          </div>
-          <p className="text-base mb-2">Upload files</p>
-          <p className="text-sm text-[#B0BEC5] mb-4">Drag and drop to upload</p>
-          <button
-            onClick={handleSelectFilesClick}
-            className="border border-white text-white px-4 py-1.5 rounded-lg hover:bg-white hover:text-[#1C2526] transition"
-          >
-            Select file
-          </button>
-          {/* Hidden file input */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileSelect}
-            className="hidden"
-          />
+          {file ? (
+            <div className="w-full flex flex-col gap-3 ">
+              {file && (
+                <div className="mb-4 ">
+                  <div className="flex items-center gap-1 mb-1">
+                    <FaFile />
+                    <div className="text-base">Selected File:</div>
+                  </div>
+                  <p className="text-sm text-[#B0BEC5]">{file.name}</p>
+                </div>
+              )}
+              <div className="w-full flex items-center justify-evenly">
+                <div
+                  onClick={() => uploadDocument(file, 0)}
+                  className="px-5 py-2  bg-dark-gray text-light-green rounded-full shadow-md flex items-center justify-center gap-1 
+             transition-all active:scale-98 no-select duration-200 ease-in-out hover:bg-like-gray hover:scale-105 hover:shadow-lg"
+                >
+                  {/* <FaPlus size={15} color="white" /> */}
+                  <p className="text-[17px] font-medium">Indepth</p>
+                </div>{" "}
+                <div
+                  onClick={() => uploadDocument(file, 1)}
+                  className="px-5 py-2  bg-dark-gray text-light-green rounded-full shadow-md flex items-center justify-center gap-1 
+             transition-all active:scale-98 no-select duration-200 ease-in-out hover:bg-like-gray hover:scale-105 hover:shadow-lg"
+                >
+                  {/* <FaPlus size={15} color="white" /> */}
+                  <p className="text-[17px] font-medium">Concise</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {" "}
+              <div className="w-12 h-12 rounded-full bg-[#4A5657] flex justify-center items-center mb-3">
+                <span className="text-2xl">📷</span>
+              </div>
+              <p className="text-base mb-2">Upload files</p>
+              <p className="text-sm text-[#B0BEC5] mb-4">
+                Drag and drop to upload
+              </p>
+              <button
+                onClick={handleSelectFilesClick}
+                className="border border-white text-white px-4 py-1.5 rounded-lg hover:bg-white hover:text-[#1C2526] transition"
+              >
+                Select file
+              </button>
+              {/* Hidden file input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            </>
+          )}
         </div>
 
         {/* Display selected file */}
-        {file && (
-          <div className="mb-4">
-            <p className="text-base mb-2">Selected File:</p>
-            <p className="text-sm text-[#B0BEC5]">{file.name}</p>
-          </div>
-        )}
       </div>
     </Modal>
   );

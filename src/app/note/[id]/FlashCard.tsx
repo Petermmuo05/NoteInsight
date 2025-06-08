@@ -62,7 +62,7 @@ export default function FlashCard({ quizList }: { quizList: Quiz[] }) {
           <div
             className={`overflow-hidden transition-all duration-500 ease-in-out ${
               isAnswerVisible
-                ? "mt-10 sm:mt-5 md:mt-6 lg:mt-8 max-h-[200px] sm:max-h-[250px] md:max-h-[280px] lg:max-h-[300px] opacity-100"
+                ? "mt-10 sm:mt-5 md:mt-6 lg:mt-8 max-h-[300px] sm:max-h-[350px] md:max-h-[350px] lg:max-h-[370px] opacity-100"
                 : "max-h-0 opacity-0"
             }`}
           >
@@ -89,7 +89,7 @@ export default function FlashCard({ quizList }: { quizList: Quiz[] }) {
           <div
             className={`w-full flex justify-end items-center py-1 overflow-hidden transition-all duration-500 ease-in-out ${
               !isAnswerVisible
-                ? "mt-8 sm:mt-5 md:mt-6 lg:mt-8 max-h-[200px] sm:max-h-[250px] md:max-h-[280px] lg:max-h-[300px] opacity-100"
+                ? "mt-8 sm:mt-5 md:mt-6 lg:mt-8  sm:max-h-[250px] md:max-h-[280px] lg:max-h-[300px] opacity-100"
                 : "max-h-0 opacity-0"
             }`}
           >
