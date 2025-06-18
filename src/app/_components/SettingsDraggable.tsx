@@ -13,7 +13,7 @@ import {
 import { useTheme, useMediaQuery } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { FaArrowLeft, FaMoon, FaSun } from "react-icons/fa";
+import { FaArrowLeft, FaSun } from "react-icons/fa";
 import { Tag } from "../_lib/definitions";
 import SmallTagTab from "./smallTagTab";
 
@@ -169,10 +169,10 @@ const SettingsDrawer = ({
             <div className="flex flex-col w-full h-full">
               <div className="flex flex-row w-full  gap-4">
                 {/* Dark Theme Option */}
-                <div className="w-full h-[70px] border border-white flex items-center rounded-2xl justify-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
+                {/* <div className="w-full h-[70px] border border-white flex items-center rounded-2xl justify-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
                   <FaMoon size={16} />
                   Dark
-                </div>
+                </div> */}
 
                 {/* Light Theme Option */}
                 <div className="w-full flex border border-white items-center rounded-2xl justify-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">

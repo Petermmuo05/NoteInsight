@@ -37,7 +37,7 @@ export default function LoadingScreen() {
             <div className="w-3 h-3 bg-[#d8f999] rounded-full animate-bounce [animation-duration:0.5s]"></div>
           </div>
           {isCreatingNote && (
-            <div className="mt-6 text-[16px] font-extrabold text-[#bcd88a] drop-shadow z-10">
+            <div className="mt-6 text-[16px] font-bold text-[#d8f999] drop-shadow z-10">
               {steps[step]} ...
             </div>
           )}

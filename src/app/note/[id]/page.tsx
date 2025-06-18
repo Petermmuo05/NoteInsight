@@ -13,6 +13,7 @@ import { NoteData } from "@/app/_lib/definitions";
 import { ModalProvider } from "@/app/dashboard/modal_context";
 import { FormModalProvider } from "./ModalContext";
 import FormModal from "./EditNoteModal";
+import { DonateModalProvider } from "@/app/_components/DonateModalContext";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -32,23 +33,26 @@ export default async function Note({ params }: { params: { id: string } }) {
     <QuizProvider>
       <ModalProvider>
         <FormModalProvider>
-          <div
-            className={`flex ${openSans} gap-4 flex-col scrollbar-hide bg-[#f9f8f6] text-[#1b140e] p-4 min-h-screen`}
-          >
-            <Header session={session} tags={tags} />
-            <div className="flex flex-col  gap-6 sm:gap-4 mt-20 sm:mt-24 w-full  sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
-              <NoteHeading note={noteData} token={session?.accessToken} />
-              <NoteContent note={noteData} token={session?.accessToken} />
+          <DonateModalProvider>
+            <div
+              className={`flex ${openSans} gap-4 flex-col scrollbar-hide bg-[#f9f8f6] text-[#1b140e] p-4 min-h-screen`}
+            >
+              <Header session={session} tags={tags} />
+              <div className="flex flex-col  gap-6 sm:gap-4 mt-20 sm:mt-24 w-full  sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
+                <NoteHeading note={noteData} token={session?.accessToken} />
+                <NoteContent note={noteData} token={session?.accessToken} />
+              </div>
             </div>
-          </div>
-          <LoadingScreen />
-          <FormModal
-            token={session?.accessToken}
-            noteId={Number(id)}
-            tags={tags}
-            noteTag={noteData.tag}
-            noteTitle={noteData.title}
-          />
+
+            <LoadingScreen />
+            <FormModal
+              token={session?.accessToken}
+              noteId={Number(id)}
+              tags={tags}
+              noteTag={noteData.tag}
+              noteTitle={noteData.title}
+            />
+          </DonateModalProvider>
         </FormModalProvider>
       </ModalProvider>
     </QuizProvider>

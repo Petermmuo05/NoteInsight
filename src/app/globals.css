@@ -10,6 +10,20 @@
   --color-light-green: #d8f999;
 }
 
+.animate-custom-pulse {
+  animation: custom-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes custom-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+/* Define the keyframes for the animation */
+
 .summary h2 {
   font-size: large;
   font-weight: 700;

@@ -15,7 +15,7 @@ export default function NoteOptions({
   note: NoteData;
   token: string | undefined;
   handleEdit: () => void;
-  handleDelete: () => Promise<void>;
+  handleDelete: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showTrigger, setShowTrigger] = useState(true);

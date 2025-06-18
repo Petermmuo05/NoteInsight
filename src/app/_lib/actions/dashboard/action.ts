@@ -281,3 +281,39 @@ export async function uploadProfilePicture(
 //     setIsLoading(false);
 //   }
 // };
+
+export async function getReference(
+  data: {
+    email: string;
+    amount: number;
+    currency: string;
+  },
+  token: string | undefined
+) {
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/paystack/initialize`,
+    null,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: data,
+    }
+  );
+  return res.data.reference as string;
+}
+
+// Server Action to verify transaction
+export async function verify(reference: string, token: string | undefined) {
+  console.log("Verifying transaction with reference:", reference);
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/paystack/verify`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: { reference },
+    }
+  );
+  return res.data.status === "success";
+}

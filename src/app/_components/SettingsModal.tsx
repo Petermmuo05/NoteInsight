@@ -9,7 +9,6 @@ import {
   FaUser,
   FaPaintBrush,
   FaTags,
-  FaMoon,
   FaSun,
 } from "react-icons/fa";
 import { Tag } from "../_lib/definitions";
@@ -140,9 +139,9 @@ export default function SettingsModal({
                       <div className="flex flex-col h-full">
                         <h3 className="mb-3">Theme Preference</h3>
                         <div className="flex gap-4 h-1/3">
-                          <div className="flex-1 flex items-center justify-center gap-2 border border-white rounded-2xl cursor-pointer hover:bg-gray-800 transition-colors p-2">
+                          {/* <div className="flex-1 flex items-center justify-center gap-2 border border-white rounded-2xl cursor-pointer hover:bg-gray-800 transition-colors p-2">
                             <FaMoon size={16} /> Dark
-                          </div>
+                          </div> */}
                           <div className="flex-1 flex items-center justify-center gap-2 border border-white rounded-2xl cursor-pointer hover:bg-gray-800 transition-colors p-2">
                             <FaSun size={16} /> Light
                           </div>

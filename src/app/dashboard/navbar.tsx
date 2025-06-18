@@ -1,20 +1,31 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { FaHome, FaUsers } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import { FaGift, FaHome} from "react-icons/fa";
 
 const Navbar = () => {
-  const [active, setActive] = useState("Home");
+  const pathname = usePathname();
 
   const menuItems = [
-    { name: "Home", icon: <FaHome />, url:"/dashboard" },
-    { name: "Community", icon: <FaUsers /> },
+    { name: "Home", icon: <FaHome />, url: "/dashboard" },
+    { name: "Donate", icon: <FaGift />, url: "/donate" },
   ];
 
+  // Determine active based on current route
+  const active = useMemo(() => {
+    const found = menuItems.find(
+      (item) => item.url && pathname.startsWith(item.url)
+    );
+    return found ? found.name : "";
+  }, [pathname]);
+
+  
   return (
     <div className="hidden sm:flex gap-2 justify-center">
       {menuItems.map((item) => (
-        <Link href={item.url? item.url : "/dashboard"}
+        <Link
+          href={item.url ? item.url : "/dashboard"}
           key={item.name}
           className={`relative flex items-center justify-center  px-3 py-2 rounded-full transition-[width,background-color] duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
             active === item.name
@@ -23,7 +34,6 @@ const Navbar = () => {
                 }`
               : "bg-[#ececec] text-gray-500 w-12"
           } cursor-pointer`}
-          onClick={() => setActive(item.name)}
         >
           <span className="text-[15px]">{item.icon}</span>
           <span
