@@ -8,6 +8,9 @@ import { useQuiz } from "./QuizContext";
 import { NoteData } from "@/app/_lib/definitions";
 import DOMPurify from "dompurify"; // For sanitizing HTML
 import axios from "axios";
+import createPrompt from "@/app/_components/createPrompt";
+import { useDonateModal } from "@/app/_components/DonateModalContext";
+import { useSession } from "next-auth/react";
 
 // Import NoteSummary is commented out, so ignoring for now
 
@@ -25,6 +28,8 @@ export default function NoteContent({
 
   // 1. Add state to hold the sanitized HTML
   const [sanitizedSummaryHtml, setSanitizedSummaryHtml] = useState("");
+  const { openModal } = useDonateModal();
+  const { data: session } = useSession();
 
   // 2. Use useEffect to perform sanitization on the client side
   useEffect(() => {
@@ -104,7 +109,10 @@ export default function NoteContent({
           <div className="flex justify-center gap-1 items-center">
             <Tooltip title="Quiz" arrow>
               <MdQuiz
-                onClick={openQuiz}
+                onClick={() => {
+                  openQuiz();
+                  createPrompt(session?.user.noPromptTill, openModal);
+                }}
                 size={35}
                 className="active:scale-90 hover:scale-102 transition-all duration-200 ease-in-out cursor-pointer"
               />
@@ -119,9 +127,7 @@ export default function NoteContent({
             {/* 3. Use the state variable here */}
             {/* Add a check to ensure sanitizedSummaryHtml is not empty before rendering */}
             {sanitizedSummaryHtml ? (
-              <div
-                dangerouslySetInnerHTML={{ __html: sanitizedSummaryHtml }}
-              />
+              <div dangerouslySetInnerHTML={{ __html: sanitizedSummaryHtml }} />
             ) : (
               // Optional: Display a loading message or placeholder if summary is not yet processed
               <p>Loading summary...</p> // Or handle error display if needed

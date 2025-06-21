@@ -63,8 +63,9 @@ const authConfig = {
         token.id = user.id;
         token.name = user.firstName;
         token.email = user.email;
-        token.image=user.image;
+        token.image = user.image;
         token.accessToken = user.token;
+        token.noPromptTill = user.noPromptTill;
       }
 
       // On every call: validate expiry
@@ -87,6 +88,8 @@ const authConfig = {
         if (session.user?.username) token.name = session.user.username;
         if (session.user?.email) token.email = session.user.email;
         if (session.user?.image) token.image = session.user.image;
+        if (session.user?.noPromptTill)
+          token.noPromptTill = session.user.noPromptTill;
         if (session.accessToken) token.accessToken = session.accessToken; // Handle new token
       }
 
@@ -110,8 +113,9 @@ const authConfig = {
       session.user = {
         id: token.id as string,
         username: token.name as string,
-        image:token.image as string,
+        image: token.image as string,
         email: token.email as string,
+        noPromptTill: token.noPromptTill as string | null | undefined,
       };
       // Pass through accessToken for fetch() calls
       (session as any).accessToken = token.accessToken;

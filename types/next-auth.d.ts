@@ -8,6 +8,7 @@ declare module "next-auth" {
       username: string | null | undefined;
       email: string | null | undefined;
       image: string | null | undefined;
+      noPromptTill: string | null | undefined;
     };
     accessToken: string;
     error: string | null | undefined;

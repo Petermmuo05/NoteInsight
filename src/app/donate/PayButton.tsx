@@ -1,12 +1,24 @@
 "use client";
 import React, { useState } from "react";
 import { Session } from "next-auth";
-import { verify } from "../_lib/actions/dashboard/action";
+import { updateUser, verify } from "../_lib/actions/dashboard/action";
 import Image from "next/image";
 import logo from "../../../public/paystack.svg";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 interface Props {
   session: Session;
+}
+interface Tnx {
+  id: string;
+  reference: string;
+  message: string;
+  redirecturl: string;
+  status: "success";
+  trans: string;
+  transaction: string;
+  trxref: string;
 }
 
 const CURRENCIES = [
@@ -26,6 +38,7 @@ export function PayButton({ session }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [customMode, setCustomMode] = useState(false);
   const [customInput, setCustomInput] = useState("");
+  const { update } = useSession();
 
   const currencyObj = CURRENCIES.find((c) => c.code === currency)!;
   const currencySymbol = currencyObj.symbol;
@@ -81,6 +94,37 @@ export function PayButton({ session }: Props) {
       return;
     }
 
+    const handleSessionUpdate = async (noPromptTill: string) => {
+      try {
+        // toast.loading("Updating user...");
+        const data = await updateUser(session?.accessToken, {
+          token: session?.accessToken,
+          name: session?.user?.username || "",
+          email,
+          noPromptTill,
+        });
+        console.log(data, "data after update");
+
+        const newSession = await update({
+          user: {
+            id: data.id,
+            username: data.firstName,
+            image: data.image,
+            email: data.email,
+            noPromptTill: data.noPromptTill,
+          },
+          accessToken: data.token,
+        });
+        console.log(newSession, "new session after update");
+        // toast.dismiss();
+        toast.success("User updated successfully");
+      } catch (error) {
+        // toast.dismiss();
+        console.error("Error updating user:", error);
+        toast.error("Failed to update user");
+      }
+    };
+
     const { default: PaystackPop } = await import("@paystack/inline-js");
     const pop = new PaystackPop();
 
@@ -89,9 +133,12 @@ export function PayButton({ session }: Props) {
       email,
       amount: amount * 100, // Convert to kobo if NGN, cents if USD
       currency,
-      onSuccess: async (txn: any) => {
-        const ok = await verify(txn.reference, session?.accessToken);
-        alert(ok ? "Thank you for your donation!" : "Verification failed");
+      onSuccess: async (txn: Tnx) => {
+        const verification = await verify(txn.reference, session?.accessToken);
+        if (verification.status) {
+          //update user session with noPromptTill
+          handleSessionUpdate(verification.noPromptTill);
+        }
         setIsLoading(false);
       },
       onCancel: () => {

@@ -6,6 +6,9 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
+import createPrompt from "@/app/_components/createPrompt";
+import { useDonateModal } from "@/app/_components/DonateModalContext";
+import { useSession } from "next-auth/react";
 
 export default function FrostedGlassBox({
   note,
@@ -15,6 +18,8 @@ export default function FrostedGlassBox({
   handleClick?: (format: "pdf" | "word") => void;
 }) {
   const [open, setOpen] = useState(false);
+  const { openModal } = useDonateModal();
+  const { data: session } = useSession();
 
   // Dummy export function, replace with your actual export logic
   const exportHtml = async (format: "pdf" | "word") => {
@@ -50,7 +55,11 @@ export default function FrostedGlassBox({
           hover:shadow-2xl 
           active:scale-95
         "
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          if (session?.user.noPromptTill)
+            createPrompt(session?.user.noPromptTill, openModal);
+        }}
       >
         <div className="flex items-center bg-light-gray p-3 rounded-lg justify-center">
           <FaFile className="text-[15px] sm:text-[20px]" />

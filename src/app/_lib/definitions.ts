@@ -3,6 +3,7 @@ export type User = {
   firstName: string;
   email: string;
   image: string | null;
+  noPromptTill: string | null | undefined;
   token: string;
 };
 

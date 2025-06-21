@@ -5,6 +5,9 @@ import { MoreVertical } from "lucide-react";
 import NoteStar from "../note/[id]/note_star";
 import { NoteData } from "../_lib/definitions";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { useSession } from "next-auth/react";
+import { useDonateModal } from "./DonateModalContext";
+import createPrompt from "./createPrompt";
 
 export default function NoteOptions({
   note,
@@ -20,6 +23,8 @@ export default function NoteOptions({
   const [isOpen, setIsOpen] = useState(false);
   const [showTrigger, setShowTrigger] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
+  const { openModal } = useDonateModal();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -60,7 +65,7 @@ export default function NoteOptions({
           className="p-2 rounded-full hover:bg-gray-200 active:scale-90 transition"
           whileTap={{ scale: 0.9 }}
         >
-          <MoreVertical size={24}/>
+          <MoreVertical size={24} />
         </motion.button>
       )}
 
@@ -84,6 +89,7 @@ export default function NoteOptions({
               onClick={() => {
                 handleEdit();
                 setIsOpen(false);
+                createPrompt(session?.user.noPromptTill, openModal);
               }}
               className="sm:p-1 transition-all duration-200 ease-in-out cursor-pointer active:scale-90 hover:scale-102"
               //   whileHover={{ scale: 1.1 }}

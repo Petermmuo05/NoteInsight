@@ -1,4 +1,4 @@
-import { Open_Sans } from "next/font/google";
+// import { Open_Sans } from "next/font/google";
 
 import Header from "../_components/header_bar";
 import { ModalProvider } from "./modal_context";
@@ -17,18 +17,17 @@ import Fab from "./fab";
 import { DonateModalProvider } from "../_components/DonateModalContext";
 import DonationModal from "../_components/donateModal";
 
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "700", "800"],
-});
+// const openSans = Open_Sans({
+//   subsets: ["latin"],
+//   weight: ["400", "700", "800"],
+// });
 
 export default async function Dashboard() {
   const session = await auth();
   const notes: NoteData[] = await getAllUserNotes(session?.accessToken);
   const tags = await getAllTags(session?.accessToken);
 
-  console.log(notes);
-  console.log(session);
+  console.log("session", session);
 
   return (
     <ModalProvider>
@@ -54,7 +53,7 @@ export default async function Dashboard() {
             </>
           )}
         </div>
-        <DonationModal/>
+        <DonationModal />
       </DonateModalProvider>
 
       <LoadingScreen />

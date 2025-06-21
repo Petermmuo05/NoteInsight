@@ -1,8 +1,58 @@
 "use client";
+// import Link from "next/link";
+// import { usePathname } from "next/navigation";
+// import { useMemo } from "react";
+// import { FaGift, FaHome} from "react-icons/fa";
+
+// const Navbar = () => {
+//   const pathname = usePathname();
+
+//   const menuItems = [
+//     { name: "Home", icon: <FaHome />, url: "/dashboard" },
+//     { name: "Donate", icon: <FaGift />, url: "/donate" },
+//   ];
+
+//   // Determine active based on current route
+//   const active = useMemo(() => {
+//     const found = menuItems.find(
+//       (item) => item.url && pathname.startsWith(item.url)
+//     );
+//     return found ? found.name : "";
+//   }, [pathname]);
+
+//   return (
+//     <div className="hidden sm:flex gap-2 justify-center">
+//       {menuItems.map((item) => (
+//         <Link
+//           href={item.url ? item.url : "/dashboard"}
+//           key={item.name}
+//           className={`relative flex items-center justify-center  px-3 py-2 rounded-full transition-[width,background-color] duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+//             active === item.name
+//               ? `bg-black text-white px-5 py-3 shadow-lg scale-105 ${
+//                   item.name === "Community" ? "w-[120px]" : "w-24"
+//                 }`
+//               : "bg-[#ececec] text-gray-500 w-12"
+//           } cursor-pointer`}
+//         >
+//           <span className="text-[15px]">{item.icon}</span>
+//           <span
+//             className={`overflow-hidden text-[10px] transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+//               active === item.name ? "opacity-100 w-auto ml-1" : "opacity-0 w-0"
+//             }`}
+//           >
+//             {item.name}
+//           </span>
+//         </Link>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default Navbar;
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
-import { FaGift, FaHome} from "react-icons/fa";
+import { FaGift, FaHome } from "react-icons/fa";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -20,32 +70,51 @@ const Navbar = () => {
     return found ? found.name : "";
   }, [pathname]);
 
-  
+  // Define the custom animation for the border
+  const styles = `
+    @keyframes border-color {
+      0% { border-color: #34d399; }
+      50% { border-color: #3b82f6; }
+      100% { border-color: #34d399; }
+    }
+  `;
+
   return (
-    <div className="hidden sm:flex gap-2 justify-center">
-      {menuItems.map((item) => (
-        <Link
-          href={item.url ? item.url : "/dashboard"}
-          key={item.name}
-          className={`relative flex items-center justify-center  px-3 py-2 rounded-full transition-[width,background-color] duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
-            active === item.name
-              ? `bg-black text-white px-5 py-3 shadow-lg scale-105 ${
-                  item.name === "Community" ? "w-[120px]" : "w-24"
-                }`
-              : "bg-[#ececec] text-gray-500 w-12"
-          } cursor-pointer`}
-        >
-          <span className="text-[15px]">{item.icon}</span>
-          <span
-            className={`overflow-hidden text-[10px] transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
-              active === item.name ? "opacity-100 w-auto ml-1" : "opacity-0 w-0"
-            }`}
+    <>
+      <style>{styles}</style>
+      <div className="hidden sm:flex gap-2 justify-center">
+        {menuItems.map((item) => (
+          <Link
+            href={item.url ? item.url : "/dashboard"}
+            key={item.name}
+            className={`relative flex items-center justify-center px-3 py-2 rounded-full transition-[width,background-color] duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+              item.name === "Donate"
+                ? "border-2 animate-[border-color_3s_infinite]"
+                : ""
+            } ${
+              active === item.name
+                ? item.name === "Donate"
+                  ? "bg-green-600 text-white px-5 py-3 shadow-lg scale-105 "
+                  : `bg-black text-white px-5 py-3 shadow-lg scale-105`
+                : item.name === "Donate"
+                ? "bg-green-100 text-green-700 w-12"
+                : "bg-[#ececec] text-gray-500 w-12"
+            } cursor-pointer`}
           >
-            {item.name}
-          </span>
-        </Link>
-      ))}
-    </div>
+            <span className="text-[15px]">{item.icon}</span>
+            <span
+              className={`overflow-hidden text-[10px] transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+                active === item.name
+                  ? "opacity-100 w-auto ml-1"
+                  : "opacity-0 w-0"
+              }`}
+            >
+              {item.name}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </>
   );
 };
 

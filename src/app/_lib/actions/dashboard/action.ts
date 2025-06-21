@@ -167,7 +167,12 @@ export async function updateFavorite(
 
 export async function updateUser(
   token: string | undefined,
-  userData: { token: string | undefined; name: string; email: string }
+  userData: {
+    token: string | undefined;
+    name: string;
+    email: string;
+    noPromptTill: string | null | undefined;
+  }
 ) {
   try {
     const response = await axios.patch(
@@ -306,7 +311,7 @@ export async function getReference(
 // Server Action to verify transaction
 export async function verify(reference: string, token: string | undefined) {
   console.log("Verifying transaction with reference:", reference);
-  const res = await axios.get(
+  const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/api/paystack/verify`,
     {
       headers: {
@@ -315,5 +320,5 @@ export async function verify(reference: string, token: string | undefined) {
       params: { reference },
     }
   );
-  return res.data.status === "success";
+  return response.data;
 }

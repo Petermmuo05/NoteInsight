@@ -14,6 +14,7 @@ import { ModalProvider } from "@/app/dashboard/modal_context";
 import { FormModalProvider } from "./ModalContext";
 import FormModal from "./EditNoteModal";
 import { DonateModalProvider } from "@/app/_components/DonateModalContext";
+import DonationModal from "@/app/_components/donateModal";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default async function Note({ params }: { params: { id: string } }) {
               <div className="flex flex-col  gap-6 sm:gap-4 mt-20 sm:mt-24 w-full  sm:px-[5rem] md:px-[8rem] lg:px-48 text-like-gray h-full">
                 <NoteHeading note={noteData} token={session?.accessToken} />
                 <NoteContent note={noteData} token={session?.accessToken} />
+                <DonationModal />
               </div>
             </div>
 

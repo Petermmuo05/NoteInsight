@@ -7,6 +7,8 @@ import { Session } from "next-auth";
 import SockJS from "sockjs-client";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useDonateModal } from "../_components/DonateModalContext";
+import createPrompt from "../_components/createPrompt";
 
 interface ErrorResponse {
   error: string;
@@ -14,6 +16,7 @@ interface ErrorResponse {
 
 export default function AttachFile({ session }: { session: Session | null }) {
   const { openModal, stopLoading } = useModal();
+  const { openModal: openDonateModal } = useDonateModal();
   const client = useRef<Client | null>(null);
   const jwt = session?.accessToken;
   // const userEmail = session?.user.email;
@@ -69,7 +72,10 @@ export default function AttachFile({ session }: { session: Session | null }) {
 
   return (
     <div
-      onClick={openModal}
+      onClick={() => {
+        openModal();
+        createPrompt(session?.user.noPromptTill, openDonateModal);
+      }}
       className="px-4 py-2 hidden bg-black text-white rounded-full shadow-md sm:flex items-center justify-center gap-1 
              transition-all active:scale-98 no-select duration-200 ease-in-out hover:bg-like-gray hover:scale-105 hover:shadow-lg"
     >

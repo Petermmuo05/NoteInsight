@@ -10,7 +10,6 @@ import {
 import toast from "react-hot-toast";
 import { MdEdit } from "react-icons/md";
 
-
 export default function ProfileTab() {
   const { data: session, update } = useSession();
   const [name, setName] = useState(session?.user.username || "");
@@ -18,7 +17,6 @@ export default function ProfileTab() {
   const [email, setEmail] = useState(session?.user.email || "");
   const [imageUrl, setImageUrl] = useState(session?.user.image || null); // 👈 add user image
   const fileInputRef = useRef<HTMLInputElement>(null);
-
 
   useEffect(() => {
     if (session?.user) {
@@ -28,7 +26,6 @@ export default function ProfileTab() {
     }
   }, [session]);
 
-  
   // useEffect to track changes in the name and email fields
   useEffect(() => {
     if (name !== session?.user.username || email !== session?.user.email) {
@@ -46,9 +43,16 @@ export default function ProfileTab() {
         token: session?.accessToken,
         name,
         email,
+        noPromptTill: session?.user.noPromptTill,
       });
       await update({
-        user: { username: data.firstName, email: data.email },
+        user: {
+          id: data.id,
+          username: data.firstName,
+          image: data.image,
+          email: data.email,
+          noPromptTill: data.noPromptTill,
+        },
         accessToken: data.token,
       });
       toast.success("User updated successfully");
